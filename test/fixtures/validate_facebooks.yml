@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uid: 1
+  time: 2015-08-21 00:44:13
+  before: 1
+  url: MyString
+  url_id: 1
+
+two:
+  uid: 1
+  time: 2015-08-21 00:44:13
+  before: 1
+  url: MyString
+  url_id: 1

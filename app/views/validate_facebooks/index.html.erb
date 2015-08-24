@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Validate Facebooks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Uid</th>
+      <th>Time</th>
+      <th>Before</th>
+      <th>Url</th>
+      <th>Url</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @validate_facebooks.each do |validate_facebook| %>
+      <tr>
+        <td><%= validate_facebook.uid %></td>
+        <td><%= validate_facebook.time %></td>
+        <td><%= validate_facebook.before %></td>
+        <td><%= validate_facebook.url %></td>
+        <td><%= validate_facebook.url_id %></td>
+        <td><%= link_to 'Show', validate_facebook %></td>
+        <td><%= link_to 'Edit', edit_validate_facebook_path(validate_facebook) %></td>
+        <td><%= link_to 'Destroy', validate_facebook, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Validate facebook', new_validate_facebook_path %>
