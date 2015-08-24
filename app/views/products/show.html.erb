@@ -33,6 +33,7 @@
     <%= link_to 'Back', products_path %>
     <script type="text/javascript">
 
+
     function check_if_user_liked(){
       $.get('http://localhost:3000/get_likes/'+ data_get_id + '.json',function(data,status) {
         data_parse = JSON.parse(data);
