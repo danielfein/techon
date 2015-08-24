@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sender_uid: 1
+  recipient_uid: 1
+  payment_amount: 1
+  date_occured: 2015-08-24 05:08:21
+  provider_type: MyString
+
+two:
+  sender_uid: 1
+  recipient_uid: 1
+  payment_amount: 1
+  date_occured: 2015-08-24 05:08:21
+  provider_type: MyString

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Sender uid:</strong>
+  <%= @transaction.sender_uid %>
+</p>
+
+<p>
+  <strong>Recipient uid:</strong>
+  <%= @transaction.recipient_uid %>
+</p>
+
+<p>
+  <strong>Payment amount:</strong>
+  <%= @transaction.payment_amount %>
+</p>
+
+<p>
+  <strong>Date occured:</strong>
+  <%= @transaction.date_occured %>
+</p>
+
+<p>
+  <strong>Provider type:</strong>
+  <%= @transaction.provider_type %>
+</p>
+
+<%= link_to 'Edit', edit_transaction_path(@transaction) %> |
+<%= link_to 'Back', transactions_path %>

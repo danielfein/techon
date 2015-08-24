@@ -22,70 +22,72 @@
 </p>
 <p>
   <strong>Active:</strong></p>
-<p>
-  <strong>URL:</strong>
-  <button onclick="facebookWindow(this,'<%= @product.pretty_url %>')">
-  Like <%= @product.name %></button>
-</p>
+  <p>
+    <strong>URL:</strong>
+    <button onclick="facebookWindow(this,'<%= @product.pretty_url %>')">
+      Like <%= @product.name %></button>
+    </p>
 
 
-<%= link_to 'Edit', edit_product_path(@product) %> |
-<%= link_to 'Back', products_path %>
-<script type="text/javascript">
+    <%= link_to 'Edit', edit_product_path(@product) %> |
+    <%= link_to 'Back', products_path %>
+    <script type="text/javascript">
 
-function check_if_user_liked(){
-  $.get('http://localhost:3000/set_likes/<%= @product.id %>.json',function(data,status) {
-  data_parse = JSON.parse(data);
-  awarded = data_parse.awarded;
-  if (awarded == 1){
-    console.log('awarded');
-  }else{
-    console.log('not awarded');
-  }
-  },'html');
-}
-var data_parse;
-function facebookWindow(element,url) {
-var facebook_Window = window.open(url,"facebook_Window","width=800,height=400,scrollbars=no");
-console.log('window opened')
-$.get('http://localhost:3000/set_likes/<%= @product.id %>.json',function(data,status) {
-console.log(data);
-data_parse = JSON.parse(data);
-check_if_closed();
-},'html');
-
-
-console.log('Ajax ran');
-
-console.log("Facebook window is opened: " + facebook_Window.closed);
-counter = 0;
-
-function check_if_closed() {
-  setTimeout(function(){
-  console.log('in check if closed');
-  if(facebook_Window.closed){
-    console.log('Closed via user');
-    clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
-    console.log('Closed out check and automated');
-    check_if_user_liked(data_parse);
-  }else{
-    if(counter = 0){
-      automated_close();
+    function check_if_user_liked(){
+      $.get('http://localhost:3000/get_likes/'+ data_get_id + '.json',function(data,status) {
+        data_parse = JSON.parse(data);
+        awarded = data_parse.awarded;
+        if (awarded == 1){
+          console.log('awarded');
+        }else{
+          console.log('not awarded');
+        }
+      },'html');
     }
-    check_if_closed();
-  }
-}, 1000);
-}
+    var data_parse;
+    function facebookWindow(element,url) {
+      var facebook_Window = window.open(url,"facebook_Window","width=800,height=400,scrollbars=no");
+      console.log('window opened')
+      $.get('http://localhost:3000/set_likes/<%= @product.id %>.json',function(data,status) {
+        console.log(data);
+        data_parse = JSON.parse(data);
+        data_get_id = data_parse['id']
+        console.log("Data ID: " + data_get_id)
+        check_if_closed();
+      },'html');
 
-function automated_close() {
-  setTimeout(function(){
-  if(!facebook_Window.closed){
-    window.open('', '_self', ''); facebook_Window.close(); //Both for closing the window
-    console.log('Closed via code');
-    clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
-  }
-}, 15000);
-}
-}
 
-</script>
+      console.log('Ajax ran');
+
+      console.log("Facebook window is opened: " + facebook_Window.closed);
+      counter = 0;
+
+      function check_if_closed() {
+        setTimeout(function(){
+          console.log('in check if closed');
+          if(facebook_Window.closed){
+            console.log('Closed via user');
+            clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
+            console.log('Closed out check and automated');
+            check_if_user_liked(data_get_id);
+          }else{
+            if(counter = 0){
+              automated_close();
+            }
+            check_if_closed();
+          }
+        }, 1000);
+      }
+
+      function automated_close() {
+        setTimeout(function(){
+          if(!facebook_Window.closed){
+            window.open('', '_self', ''); facebook_Window.close(); //Both for closing the window
+            console.log('Closed via code');
+            clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
+          }
+        }, 15000);
+      }
+    }
+
+    </script>

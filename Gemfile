@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 
+gem 'json'
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-digitalocean'

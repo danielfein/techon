@@ -28,6 +28,11 @@ class ProductsController < ApplicationController
 
       new_params[:pretty_url] = product_params[:url]
       new_params[:owner_uid] = User.find(current_user).id
+      url = product_params[:url]
+      facebook = Nokogiri::HTML(open('https://graph.facebook.com/v2.4/?ids='+ url +'&fields=likes&access_token=CAAXoqRFHZA7gBADEidGMAmn8q9TLXWUq4RcQHLZAqRW7fj8GZBfek1u0lPvCDNThjYWOOKbZCO6mdzvCgZAZBcJrAwIjvgYAyas0xCGVKmIrX3rVEfzM0eZBX9DZBRvv7fcM4UevMwyzd2FiUbKaDLZBhImK7x21O0l2AAiJkEqs3sCJQTN6OMFmZAAe5EwuDGFyoZD'));
+
+
+      new_params[:facebook_id] = JSON.parse(facebook)['id']
 
     @product = Product.new(new_params)
 
