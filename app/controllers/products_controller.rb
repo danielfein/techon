@@ -1,9 +1,11 @@
+require 'open-uri'
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
 
   # GET /products
   # GET /products.json
   def index
+    display_balance()
     @products = Product.all
   end
 
@@ -29,23 +31,37 @@ class ProductsController < ApplicationController
       new_params[:pretty_url] = product_params[:url]
       new_params[:owner_uid] = User.find(current_user).id
       url = product_params[:url]
-      facebook = Nokogiri::HTML(open('https://graph.facebook.com/v2.4/?ids='+ url +'&fields=likes&access_token=CAAXoqRFHZA7gBADEidGMAmn8q9TLXWUq4RcQHLZAqRW7fj8GZBfek1u0lPvCDNThjYWOOKbZCO6mdzvCgZAZBcJrAwIjvgYAyas0xCGVKmIrX3rVEfzM0eZBX9DZBRvv7fcM4UevMwyzd2FiUbKaDLZBhImK7x21O0l2AAiJkEqs3sCJQTN6OMFmZAAe5EwuDGFyoZD'));
 
+      # abort("https://graph.facebook.com/v2.4/?ids=#{url}&fields=likes&access_token=CAAXoqRFHZA7gBADEidGMAmn8q9TLXWUq4RcQHLZAqRW7fj8GZBfek1u0lPvCDNThjYWOOKbZCO6mdzvCgZAZBcJrAwIjvgYAyas0xCGVKmIrX3rVEfzM0eZBX9DZBRvv7fcM4UevMwyzd2FiUbKaDLZBhImK7x21O0l2AAiJkEqs3sCJQTN6OMFmZAAe5EwuDGFyoZD".inspect)
+    begin
+      facebook = Nokogiri::HTML(open("https://graph.facebook.com/v2.4/?ids=#{url}&fields=likes&access_token=CAAXoqRFHZA7gBADEidGMAmn8q9TLXWUq4RcQHLZAqRW7fj8GZBfek1u0lPvCDNThjYWOOKbZCO6mdzvCgZAZBcJrAwIjvgYAyas0xCGVKmIrX3rVEfzM0eZBX9DZBRvv7fcM4UevMwyzd2FiUbKaDLZBhImK7x21O0l2AAiJkEqs3sCJQTN6OMFmZAAe5EwuDGFyoZD"))
 
-      new_params[:facebook_id] = JSON.parse(facebook)['id']
+            new_params[:facebook_id] = JSON.parse(facebook)['id']
 
-    @product = Product.new(new_params)
+          @product = Product.new(new_params)
 
-    respond_to do |format|
-      if @product.save
-        format.html { redirect_to @product, notice: 'Product was successfully created.' }
-        format.json { render :show, status: :created, location: @product }
-      else
-        format.html { render :new }
+          respond_to do |format|
+            if @product.save
+
+              format.html { redirect_to @product, notice: 'Product was successfully created.' }
+              format.json { render :show, status: :created, location: @product }
+            else
+              format.html { render :new }
+              format.json { render json: @product.errors, status: :unprocessable_entity }
+            end
+          end
+    rescue
+
+      respond_to do |format|
+        @product = Product.new(new_params)
+        @product.errors.add(:url, "Invalid URL, please ensure it is a proper Facebook Page URL")
+        format.html { render :new}
         format.json { render json: @product.errors, status: :unprocessable_entity }
-      end
-    end
+        end
+
+
   end
+end
 
   # PATCH/PUT /products/1
   # PATCH/PUT /products/1.json

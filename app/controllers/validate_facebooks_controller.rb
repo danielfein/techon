@@ -31,12 +31,13 @@ def get_likes()
 
 #Get transaction details
   @user_id = @before_count.uid #ID of user who made attempt to get credits (recipient)
-  @current_product = Product.find_by_id(@before_count.product_id)
+  @product_id = @before_count.product_id
+  @current_product = Product.find_by_id(@product_id)
 
   @current_price = @current_product.price
   @current_product_sender = @current_product.owner_uid
 
-  @transaction = Transaction.new( :sender_uid => @current_product_sender, :recipient_uid =>@user_id, :payment_amount => @current_price, :provider_type => "facebook")
+  @transaction = Transaction.new( :sender_uid => @current_product_sender, :recipient_uid =>@user_id, :payment_amount => @current_price, :provider_type => "facebook", :product_id => @product_id)
   @transaction.save
 
 
@@ -48,7 +49,7 @@ def get_likes()
   current_likes_count = JSON.parse(facebook).values[0]['likes']
 
   if @before_count.before < current_likes_count
-    @transaction = Transaction.new( :sender_uid => @current_product_sender, :recipient_uid =>@user_id, :payment_amount => @current_price, :provider_type => "facebook")
+    @transaction = Transaction.new( :sender_uid => @current_product_sender, :recipient_uid =>@user_id, :payment_amount => @current_price, :provider_type => "facebook", :product_id => @product_id)
     @transaction.save
     if(Credit.find_by_uid(@user_id))
       @temp_credit = Credit.find_by_uid(@user_id)

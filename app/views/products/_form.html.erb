@@ -1,14 +1,4 @@
-<script type="text/javascript">
-
-
-function validate_form(url){
-  alert('here to validate' + url);
-  // $.get('http://localhost:3000/get_likes/'+ data_get_id + '.json',function(data,status) {
-  //   data_parse = JSON.parse(data);
-  //   awarded = data_parse.awarded;
-  // });
-}
-</script>
+<div style="position:relative;margin:0 auto;text-align:center;">
 <%= form_for(@product) do |f| %>
   <% if @product.errors.any? %>
     <div id="error_explanation">
@@ -34,11 +24,8 @@ function validate_form(url){
     <%= f.label :url %><br>
     <%= f.text_field :url %>
   </div>
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_area :description %>
-  </div>
   <div class="actions">
-    <%= f.submit :onclick => validate_form(:url);%>
+    <%= f.submit%>
   </div>
 <% end %>
+</div>
