@@ -18,6 +18,7 @@ class PlayController < ApplicationController
       end
       # @product = Product.where("price < #{@Balance}").where.not("id IN (?)", @product_ids).first
       @product = Product.where.not("id IN (?)", @product_ids).first
-      
+
+      #ALSO ADD "IN SETTINGS"
   end
 end

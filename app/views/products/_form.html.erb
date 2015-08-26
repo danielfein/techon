@@ -24,6 +24,12 @@
     <%= f.label :url %><br>
     <%= f.text_field :url %>
   </div>
+  <div class="field">
+    <%= f.radio_button :provider, 'facebook', :checked => true %>
+    <%= label :provider, 'Facebook' %>
+    <%= f.radio_button :provider, 'instagram' %>
+    <%= label :provider, 'Instagram' %>
+    </div>
   <div class="actions">
     <%= f.submit%>
   </div>

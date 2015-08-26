@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150825155511) do
+ActiveRecord::Schema.define(version: 20150825203541) do
 
   create_table "credits", force: :cascade do |t|
     t.integer  "uid",        limit: 4
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20150825155511) do
     t.string   "pretty_url",  limit: 255
     t.integer  "owner_uid",   limit: 4
     t.integer  "is_active",   limit: 4
-    t.string   "facebook_id", limit: 255
+    t.string   "provider_id", limit: 255
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -83,6 +83,18 @@ ActiveRecord::Schema.define(version: 20150825155511) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.integer  "awarded",    limit: 4,   default: 0
+    t.integer  "product_id", limit: 4
+  end
+
+  create_table "validate_instagrams", force: :cascade do |t|
+    t.integer  "uid",        limit: 4
+    t.datetime "time"
+    t.integer  "before",     limit: 4
+    t.string   "username",   limit: 255
+    t.integer  "url_id",     limit: 4
+    t.integer  "awarded",    limit: 4
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.integer  "product_id", limit: 4
   end
 

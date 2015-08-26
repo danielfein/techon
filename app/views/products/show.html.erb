@@ -1,4 +1,4 @@
-
+<% if(@show) %>
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -26,6 +26,8 @@
     <strong>URL:</strong>
     <button onclick="facebookWindow(this,'<%= @product.pretty_url %>')">
       Like <%= @product.name %></button>
+      <button onclick="instagramWindow(this,'https://instagram.com/<%= @product.pretty_url %>')">
+        Follow <%= @product.name %> on Instagram</button>
     </p>
 
 
@@ -90,5 +92,63 @@
         }, 15000);
       }
     }
+    var data_parse;
+    function instagramWindow(element,url) {
+      var instagram_Window = window.open(url,"instagram_Window","width=800,height=400,scrollbars=no");
+      console.log('window opened')
+      $.get('http://localhost:3000/set_instagram/<%= @product.id %>.json',function(data,status) {
+        console.log(data);
+        data_parse = JSON.parse(data);
+        data_get_id = data_parse['id']
+        console.log("Data ID: " + data_get_id)
+        insta_check_if_closed();
+      },'html');
 
+
+      console.log('Ajax ran');
+
+      console.log("instagram window is opened: " + instagram_Window.closed);
+      counter = 0;
+
+      function insta_check_if_closed() {
+        setTimeout(function(){
+          console.log('in check if closed');
+          if(instagram_Window.closed){
+            console.log('Closed via user');
+            clearTimeout(insta_automated_close); clearTimeout(insta_check_if_closed); //Stop timing
+            console.log('Closed out check and automated');
+            insta_check_if_user_liked(data_get_id);
+          }else{
+            if(counter = 0){
+              insta_automated_close();
+            }
+            insta_check_if_closed();
+          }
+        }, 1000);
+      }
+
+      function insta_automated_close() {
+        setTimeout(function(){
+          if(!instagram_Window.closed){
+            window.open('', '_self', ''); instagram_Window.close(); //Both for closing the window
+            console.log('Closed via code');
+            clearTimeout(insta_automated_close); clearTimeout(insta_check_if_closed); //Stop timing
+          }
+        }, 15000);
+      }
+      function insta_check_if_user_liked(){
+        $.get('http://localhost:3000/get_instagram/'+ data_get_id + '.json',function(data,status) {
+          data_parse = JSON.parse(data);
+          awarded = data_parse.awarded;
+          if (awarded == 1){
+            console.log('awarded');
+          }else{
+            console.log('not awarded');
+          }
+        },'html');
+      }
+    }
     </script>
+<% else %>
+You've already liked this product
+<% end %>

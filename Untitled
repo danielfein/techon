@@ -1,0 +1,32 @@
+def filter(input)
+  lines = input.split(/\n/) #make each line a new index
+  var_name = []
+  var_value = []
+  for entries in line
+    entries.split(" ")
+    if(entries[2].nil?) #account for =VAL (check for 3 words or 2)
+     var_name.push(entries[0])
+    var_value.push(entries[1])
+    else
+      var_name.push(entries[1])
+     var_value.push(entries[2])
+    end
+  end
+
+var_name.each_with_index do |name, index|
+    if(index != name.length)
+      print name+", "
+    else
+        puts name #no comma, and line break
+    end
+end
+
+var_value.each_with_index do |value, index|
+    if(index != value.length)
+      print value+", "
+    else
+        puts value #no comma, and line break
+    end
+end
+
+end

@@ -15,9 +15,13 @@ class User < ActiveRecord::Base
           #  user.profile_image_url = _auth.info.image
           #  user.is_social = true
            user.twitter_link = _auth.info.Twitter
-           user.instagram_token = _auth.credentials.token
-          #  user.facebook_token =
-          #  user.twitter_token =
+           if(_auth.provider == "facebook")
+    user.facebook_token = _auth.credentials.token
+         elsif(_auth.provider == "twitter")
+            user.twitter_token = _auth.credentials.token
+          elsif(_auth.provider == "instagram")
+                   user.instagram_token = _auth.credentials.token
+      end
 
          end
        end
