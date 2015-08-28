@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Validate Facebooks</h1>
+<h1>Listing Validate Instagrams</h1>
 
 <table>
   <thead>
@@ -15,16 +15,16 @@
   </thead>
 
   <tbody>
-    <% @validate_facebooks.each do |validate_facebook| %>
+    <% @validate_instagrams.each do |validate_instagram| %>
       <tr>
-        <td><%= validate_facebook.uid %></td>
-        <td><%= validate_facebook.time %></td>
-        <td><%= validate_facebook.before %></td>
-        <td><%= validate_facebook.url %></td>
-        <td><%= validate_facebook.url_id %></td>
-        <td><%= link_to 'Show', validate_facebook %></td>
-        <td><%= link_to 'Edit', edit_validate_facebook_path(validate_facebook) %></td>
-        <td><%= link_to 'Destroy', validate_facebook, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= validate_instagram.uid %></td>
+        <td><%= validate_instagram.time %></td>
+        <td><%= validate_instagram.before %></td>
+        <td><%= validate_instagram.url %></td>
+        <td><%= validate_instagram.url_id %></td>
+        <td><%= link_to 'Show', validate_instagram %></td>
+        <td><%= link_to 'Edit', edit_validate_instagram_path(validate_instagram) %></td>
+        <td><%= link_to 'Destroy', validate_instagram, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -32,4 +32,4 @@
 
 <br>
 
-<%= link_to 'New Validate facebook', new_validate_facebook_path %>
+<%= link_to 'New Validate instagram', new_validate_instagram_path %>

@@ -1,3 +1,4 @@
+<a href="/play">LET'S PLAY</a>
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Products</h1>
@@ -13,19 +14,15 @@
   </thead>
 
   <tbody>
+
     <% @products.each do |product| %>
+
       <tr>
         <td><%= product.name %></td>
         <td>
-          <% if(product.price < @Balance)  %>
-            <span style="color:green">
+
               <%= product.price %>
-            </span>
-          <% else %>
-            <span style="color:red">
-              <%= product.price %>
-            </span>
-          <% end %>
+
         </td>
         <td><%= link_to product.url, product %></td>
         <td><%= link_to 'Show', product %></td>

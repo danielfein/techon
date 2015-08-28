@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SettingsControllerTest < ActionController::TestCase
+class ChargesControllerTest < ActionController::TestCase
   # test "the truth" do
   #   assert true
   # end

@@ -1,4 +1,11 @@
 Rails.application.configure do
+
+# config.stripe.secret_key = 'sk_test_2xu5LFi0pdbU2ZymgNtB26Jt'
+# config.stripe.publishable_key = 'pk_test_zKc6jlLbPrs4AdST6ZD0qpEX'
+# config.stripe.eager_load = ['user']
+# config.stripe.debug_js = true  # use stripe-debug.js
+# config.stripe.debug_js = false # use stripe.js
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on

@@ -7,6 +7,7 @@ class ProductsController < ApplicationController
   def index
     display_balance()
     @products = Product.all
+
   end
 
   # GET /products/1
@@ -36,6 +37,7 @@ if(@pages_liked_by_user == [])
   # POST /products
   # POST /products.json
   def create
+
     new_params = product_params.clone
 
     new_params[:pretty_url] = product_params[:url]
@@ -44,7 +46,18 @@ if(@pages_liked_by_user == [])
 
     if(new_params[:provider] == "facebook")
       # abort("https://graph.facebook.com/v2.4/?ids=#{url}&fields=likes&access_token=CAAXoqRFHZA7gBADEidGMAmn8q9TLXWUq4RcQHLZAqRW7fj8GZBfek1u0lPvCDNThjYWOOKbZCO6mdzvCgZAZBcJrAwIjvgYAyas0xCGVKmIrX3rVEfzM0eZBX9DZBRvv7fcM4UevMwyzd2FiUbKaDLZBhImK7x21O0l2AAiJkEqs3sCJQTN6OMFmZAAe5EwuDGFyoZD".inspect)
+      @products = Product.all
 
+          @products.each do |x|
+            if(x.url == url)
+                @product = Product.new()
+                @product.errors.add(:url, "This link already exists in our database")
+                respond_to do |format|
+                  format.html { render :new and return }
+                  format.json { render json: @product.errors, status: :unprocessable_entity }
+                end
+            end
+          end
       begin
         facebook = Nokogiri::HTML(open("https://graph.facebook.com/v2.4/?ids=#{url}&fields=likes&access_token=CAAXoqRFHZA7gBADEidGMAmn8q9TLXWUq4RcQHLZAqRW7fj8GZBfek1u0lPvCDNThjYWOOKbZCO6mdzvCgZAZBcJrAwIjvgYAyas0xCGVKmIrX3rVEfzM0eZBX9DZBRvv7fcM4UevMwyzd2FiUbKaDLZBhImK7x21O0l2AAiJkEqs3sCJQTN6OMFmZAAe5EwuDGFyoZD"))
 
@@ -76,37 +89,53 @@ if(@pages_liked_by_user == [])
     elsif(new_params[:provider] == "instagram")
 
       begin
+          instagram = Nokogiri::HTML(open("https://api.instagram.com/v1/users/search?q=#{url}&access_token=1572822298.fb37920.1653cb1e540b441984d58ef5ce177661"))
+          new_params[:provider_id] = JSON.parse(instagram)['data'].first['id']
+          @product = Product.new(new_params)
+          respond_to do |format|
+            if @product.save
 
-
-        instagram = Nokogiri::HTML(open("https://api.instagram.com/v1/users/search?q=#{url}&access_token=1572822298.fb37920.1653cb1e540b441984d58ef5ce177661"))
-      new_params[:provider_id] = JSON.parse(instagram)['data'].first['id']
-
-        @product = Product.new(new_params)
-
-        respond_to do |format|
-          if @product.save
-
-            format.html { redirect_to @product, notice: 'Product was successfully created.' }
-            format.json { render :show, status: :created, location: @product }
-          else
-            format.html { render :new }
-            format.json { render json: @product.errors, status: :unprocessable_entity }
+              format.html { redirect_to @product, notice: 'Product was successfully created.' }
+              format.json { render :show, status: :created, location: @product }
+            else
+              format.html { render :new }
+              format.json { render json: @product.errors, status: :unprocessable_entity }
+            end
           end
-        end
       rescue
-
         respond_to do |format|
           @product = Product.new(new_params)
           @product.errors.add(:url, "Invalid URL, please ensure it is a proper Facebook Page URL")
           format.html { render :new}
           format.json { render json: @product.errors, status: :unprocessable_entity }
         end
-
-
       end
+    elsif(new_params[:provider] == "twitter")
 
+      begin
+          instagram = Nokogiri::HTML(open("https://api.instagram.com/v1/users/search?q=#{url}&access_token=1572822298.fb37920.1653cb1e540b441984d58ef5ce177661"))
+          new_params[:provider_id] = JSON.parse(instagram)['data'].first['id']
+          @product = Product.new(new_params)
+          respond_to do |format|
+            if @product.save
+
+              format.html { redirect_to @product, notice: 'Product was successfully created.' }
+              format.json { render :show, status: :created, location: @product }
+            else
+              format.html { render :new }
+              format.json { render json: @product.errors, status: :unprocessable_entity }
+            end
+          end
+      rescue
+        respond_to do |format|
+          @product = Product.new(new_params)
+          @product.errors.add(:url, "Invalid URL, please ensure it is a proper Facebook Page URL")
+          format.html { render :new}
+          format.json { render json: @product.errors, status: :unprocessable_entity }
+        end
+      end
     end
-
+    end
   end
 
   # PATCH/PUT /products/1
@@ -149,4 +178,3 @@ if(@pages_liked_by_user == [])
   def product_params
     params.require(:product).permit(:name, :price, :url, :description, :provider)
   end
-end

@@ -17,8 +17,28 @@
     <%= f.text_field :name %>
   </div>
   <div class="field">
-    <%= f.label :price %><br>
-    <%= f.number_field :price %>
+    <!-- <%= f.label :price %><br>
+    <%= f.number_field :price %> -->
+    <%= f.radio_button :price, '1', :checked => true %>
+    <%= label :price, '1' %>
+    <%= f.radio_button :price, '2' %>
+    <%= label :price, '2' %>
+    <%= f.radio_button :price, '3' %>
+    <%= label :price, '3' %>
+    <%= f.radio_button :price, '4' %>
+    <%= label :price, '4' %>
+    <%= f.radio_button :price, '5' %>
+    <%= label :price, '5' %>
+    <%= f.radio_button :price, '6' %>
+    <%= label :price, '6' %>
+    <%= f.radio_button :price, '7' %>
+    <%= label :price, '7' %>
+    <%= f.radio_button :price, '8' %>
+    <%= label :price, '8' %>
+    <%= f.radio_button :price, '9' %>
+    <%= label :price, '9' %>
+    <%= f.radio_button :price, '10' %>
+    <%= label :price, '10' %>
   </div>
   <div class="field">
     <%= f.label :url %><br>
@@ -29,6 +49,8 @@
     <%= label :provider, 'Facebook' %>
     <%= f.radio_button :provider, 'instagram' %>
     <%= label :provider, 'Instagram' %>
+    <%= f.radio_button :provider, 'twitter' %>
+    <%= label :provider, 'Twitter' %>
     </div>
   <div class="actions">
     <%= f.submit%>

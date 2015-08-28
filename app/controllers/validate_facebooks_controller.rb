@@ -36,9 +36,9 @@ def get_likes()
 
   @current_price = @current_product.price
   @current_product_sender = @current_product.owner_uid
-
-  @transaction = Transaction.new( :sender_uid => @current_product_sender, :recipient_uid =>@user_id, :payment_amount => @current_price, :provider_type => "facebook", :product_id => @product_id)
-  @transaction.save
+  #
+  # @transaction = Transaction.new( :sender_uid => @current_product_sender, :recipient_uid =>@user_id, :payment_amount => @current_price, :provider_type => "facebook", :product_id => @product_id)
+  # @transaction.save
 
 
 
