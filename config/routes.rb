@@ -12,12 +12,14 @@ Rails.application.routes.draw do
     get '/get_instagram/:id', to: 'validate_instagrams#get_instagram'
     get '/set_twitter/:id', to: 'validate_twitters#set_twitter'
     get '/get_twitter/:id', to: 'validate_twitters#get_twitter'
+
+#Stripe
     get '/payola/confirm/:id', to: redirect('/success/%{id}')
     get '/success/:id', to: 'charges#make_charge'
 
   resources :charges
 
-    #For a user's viewing pleasure lol:
+#For a user's viewing pleasure lol:
     get '/trial', to: 'validate_facebooks#trial'
     get 'play', to: 'play#product'
 
@@ -26,5 +28,7 @@ Rails.application.routes.draw do
     get 'sourc', to: 'products#index'
     get 'new_link', to: 'products#new'
     root to: 'products#index'
+
   mount Payola::Engine => '/payola', as: :payola
+
 end

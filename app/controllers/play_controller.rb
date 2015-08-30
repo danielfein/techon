@@ -1,7 +1,7 @@
 class PlayController < ApplicationController
   def product
 
-    display_balance() #for header balance
+     #for header balance
 
       @products_liked_by_user = Transaction.where("recipient_uid = #{current_user.id} OR sender_uid = #{current_user.id}")
 
@@ -31,7 +31,7 @@ class PlayController < ApplicationController
   end
 
   def index
-#         display_balance() #for header balance
+#          #for header balance
 #
 # abort(current_user.id.inspect)
 #           @products_liked_by_user = Transaction.where("recipient_uid = #{current_user.id}").where("sender_uid = #{current_user.id}")

@@ -1,10 +1,10 @@
 class ChargesController < ApplicationController
   def new
-    display_balance()
+    
   end
 
   def index
-    display_balance()
+    
   end
 
   def make_charge()

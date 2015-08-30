@@ -6,7 +6,7 @@ class ValidateInstagramsController < ApplicationController
   # GET /validate_instagrams
   # GET /validate_instagrams.json
   def index
-    display_balance()
+    
     @validate_instagrams = ValidateInstagram.all
   end
 

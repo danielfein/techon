@@ -1,28 +1,56 @@
 class User < ActiveRecord::Base
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-     :omniauthable, :omniauth_providers => [:twitter,:facebook,:instagram]
+   has_many :identities, :dependent => :destroy
+   devise :database_authenticatable, :registerable,
+   :recoverable, :rememberable, :trackable, :validatable,
+   :omniauthable, :omniauth_providers => [:twitter,:facebook,:instagram]
 
-     def self.from_omniauth( _auth )
-        # abort(_auth.inspect)
-        # abort(_auth.credentials.token.inspect)
-         where( provider: _auth.provider, uid: _auth.uid ).first_or_create do | user |
-           user.password = Devise.friendly_token[0,20]
-           user.email = "#{_auth.info.name}@#{_auth.provider}.com"
-           user.name = _auth.info.name
-           user.nickname = _auth.info.nickname
-          #  user.company = "#{ _auth.info.name }/#{_auth.provider}"
-          #  user.profile_image_url = _auth.info.image
-          #  user.is_social = true
-           user.twitter_link = _auth.info.Twitter
-           if(_auth.provider == "facebook")
-    user.facebook_token = _auth.credentials.token
-         elsif(_auth.provider == "twitter")
-            user.twitter_token = _auth.credentials.token
-          elsif(_auth.provider == "instagram")
-                   user.instagram_token = _auth.credentials.token
+   def bind_account(_auth)
+      #self = current_user
+      User.create_identity(_auth, self)
+
+   end
+
+   def self.create_identity(identity_attrs, user)
+
+      return user.identities.where(provider: identity_attrs.provider, provider_id: identity_attrs.uid).first_or_create do | identity |
+         # Provider information
+         identity.provider = identity_attrs.provider
+         identity.provider_id = identity_attrs.uid
+         identity.access_token = identity_attrs.credentials.token
+         identity.access_token_secret = identity_attrs.credentials.secret
+      end
+   end
+
+   def self.from_omniauth( _auth )
+      # abort(_auth.inspect)
+      # abort(_auth.inspect)
+      # abort(_auth.credentials.token.inspect)
+
+      user = User.joins(:identities).where(:identities => {:provider_id => _auth.uid, :provider => _auth.provider}).first
+      puts _auth.uid.inspect
+      puts _auth.provider.inspect
+      puts user.inspect
+
+      if user.nil?
+         if _auth.info.email.nil?
+            email = "#{_auth.info.name.gsub ' ','_'}@#{_auth.provider}.com"
+         else
+            puts _auth.info.email.inspect
+            email = _auth.info.email
+         end
+
+         name = _auth.info.name
+         nickname = _auth.info.nickname
+         twitter_link = _auth.info.Twitter
+         password = Devise.friendly_token[0,20]
+         user = User.create(:password => password, :email => email, :name => name, :nickname => nickname, :twitter_link => twitter_link)
+         # puts user.errors.inspect
       end
 
-         end
-       end
+      puts user.errors.inspect
+      create_identity(_auth, user)
+
+      return user
+
+   end
 end

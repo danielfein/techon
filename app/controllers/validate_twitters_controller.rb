@@ -7,7 +7,7 @@ class ValidateTwittersController < ApplicationController
   # GET /validate_twitters
   # GET /validate_twitters.json
   def index
-    display_balance()
+    
     # @test = TwitterHelper.new('CURRENT_USER_TOKEN_ID', 'CURRENT_USER_TOKEN_SECRET').search_for( 'trump' )
 
     @validate_twitters = ValidateTwitter.all

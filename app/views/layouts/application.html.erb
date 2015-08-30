@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Techon</title>
+  <title>Follow on </title>
   <%= stylesheet_link_tag    'application', media: 'all'%>
   <%= javascript_include_tag 'application'%>
   <%= csrf_meta_tags %>
 </head>
 <body>
-<h1>Your current balance is: <%= @Balance %></h1><br>
+<% if current_user %>
+   <h1>Your current balance is: <%= @Balance %></h1><br>
+<% end %>
 <%= yield %>
 
 </body>
