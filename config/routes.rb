@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-
+  devise_for :users, :controllers => { :omniauth_callbacks => "callbacks" }
   resources :validate_twitters
   resources :transactions
   resources :credits
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     get '/trial', to: 'validate_facebooks#trial'
     get 'play', to: 'play#product'
 
-  devise_for :users, :controllers => { :omniauth_callbacks => "callbacks" }
+    get '/my_products', to: 'user_created_products#index'
   resources :products
     get 'sourc', to: 'products#index'
     get 'new_link', to: 'products#new'

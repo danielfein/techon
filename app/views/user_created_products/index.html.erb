@@ -1,7 +1,4 @@
-<a href="/play">LET'S PLAY</a>
-<p id="notice"><%= notice %></p>
-<a href="<%=  edit_user_registration_path  %>">Edit User</a>
-<h1>Listing Products</h1>
+
 
 <table>
   <thead>
@@ -15,7 +12,7 @@
 
   <tbody>
 
-    <% @products.each do |product| %>
+    <% @products_by_user.each do |product| %>
 
       <tr>
         <td><%= product.name %></td>
@@ -28,8 +25,3 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
-
-<%= link_to 'New Product', new_product_path %><br>
-  <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>

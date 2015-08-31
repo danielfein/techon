@@ -18,7 +18,7 @@ class ProductsController < ApplicationController
       if(@pages_liked_by_user == [])
 
          @show = true
-      elsif
+      else
          @show = false
       end
    end
