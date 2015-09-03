@@ -8,7 +8,7 @@
       <% @products.each do |product| %>
       <% if counter == 0 %>
       <tr>
-         <td colspan="6" style="text-align:center">
+         <td colspan="5" style="text-align:center">
             ACTIVE
          </td>
       </tr>
@@ -21,7 +21,7 @@
          <td><%= product.price %></td>
          <td><%= link_to product.url, product %></td>
          <td><%= link_to 'More', product %></td>
-         <td><%= link_to 'Edit', edit_product_path(product) %></td>
+         <!-- <td><%= link_to 'Edit', edit_product_path(product) %></td> -->
          <td><%= link_to 'Hide', controller: 'products', action: 'hide', id: product.id %></td>
       </tr>
       <% end %>
@@ -31,7 +31,7 @@
       <% @products.each do |product| %>
       <% if counter == 0 %>
       <tr>
-         <td colspan="6" style="text-align:center">
+         <td colspan="5" style="text-align:center">
             HIDDEN
          </td>
       </tr>
@@ -44,7 +44,7 @@
          <td><%= product.price %></td>
          <td><%= link_to product.url, product %></td>
          <td><%= link_to 'More', product %></td>
-         <td><%= link_to 'Edit', edit_product_path(product) %></td>
+         <!-- <td><%= link_to 'Edit', edit_product_path(product) %></td> -->
          <td><%= link_to 'Show', controller: 'products', action: 'unhide', id: product.id %></td>
       </tr>
       <% end %>

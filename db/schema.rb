@@ -11,22 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150902065633) do
+ActiveRecord::Schema.define(version: 20150903192321) do
 
   create_table "credit_plans", force: :cascade do |t|
     t.integer  "price",         limit: 4
     t.string   "permalink",     limit: 255
     t.string   "name",          limit: 255
+    t.integer  "award_credits", limit: 4
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.integer  "award_credits", limit: 4
   end
 
   create_table "credits", force: :cascade do |t|
     t.integer  "uid",        limit: 4
-    t.integer  "balance",    limit: 4, default: 0, null: false
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.integer  "balance",    limit: 4, default: 50, null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "identities", force: :cascade do |t|
@@ -140,30 +140,24 @@ ActiveRecord::Schema.define(version: 20150902065633) do
   add_index "payola_subscriptions", ["guid"], name: "index_payola_subscriptions_on_guid", using: :btree
 
   create_table "products", force: :cascade do |t|
+    t.integer  "owner_uid",   limit: 4
     t.string   "name",        limit: 255
     t.integer  "price",       limit: 4
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.string   "provider",    limit: 255
     t.string   "url",         limit: 255
     t.string   "pretty_url",  limit: 255
-    t.integer  "owner_uid",   limit: 4
+    t.string   "provider",    limit: 255
     t.integer  "is_active",   limit: 4,   default: 1
     t.string   "provider_id", limit: 255
     t.string   "cover_photo", limit: 255
     t.string   "profile_pic", limit: 255
   end
 
-  create_table "settings", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "transactions", force: :cascade do |t|
     t.integer  "sender_uid",     limit: 4
     t.integer  "recipient_uid",  limit: 4
     t.integer  "payment_amount", limit: 4
-    t.datetime "date_occured"
     t.string   "provider_type",  limit: 255
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
@@ -171,6 +165,9 @@ ActiveRecord::Schema.define(version: 20150902065633) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.string   "name",                   limit: 255
+    t.string   "nickname",               limit: 255
+    t.string   "description",            limit: 255
     t.string   "email",                  limit: 255, default: "", null: false
     t.string   "encrypted_password",     limit: 255, default: "", null: false
     t.string   "reset_password_token",   limit: 255
@@ -183,17 +180,6 @@ ActiveRecord::Schema.define(version: 20150902065633) do
     t.string   "last_sign_in_ip",        limit: 255
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
-    t.string   "provider",               limit: 255
-    t.string   "uid",                    limit: 255
-    t.string   "screen_name",            limit: 255
-    t.string   "name",                   limit: 255
-    t.string   "nickname",               limit: 255
-    t.string   "website",                limit: 255
-    t.string   "twitter_link",           limit: 255
-    t.string   "description",            limit: 255
-    t.string   "facebook_token",         limit: 255
-    t.string   "instagram_token",        limit: 255
-    t.string   "twitter_token",          limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
@@ -201,42 +187,38 @@ ActiveRecord::Schema.define(version: 20150902065633) do
 
   create_table "validate_facebooks", force: :cascade do |t|
     t.integer  "uid",        limit: 4
-    t.datetime "time"
     t.integer  "before",     limit: 4
     t.string   "url",        limit: 255
-    t.integer  "url_id",     limit: 4
+    t.integer  "product_id", limit: 4
+    t.integer  "awarded",    limit: 4,   default: 0
+    t.integer  "balance",    limit: 4
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
-    t.integer  "awarded",    limit: 4,   default: 0
-    t.integer  "product_id", limit: 4
-    t.integer  "balance",    limit: 4
   end
 
   create_table "validate_instagrams", force: :cascade do |t|
     t.integer  "uid",        limit: 4
-    t.datetime "time"
     t.integer  "before",     limit: 4
     t.string   "username",   limit: 255
     t.integer  "url_id",     limit: 4
-    t.integer  "awarded",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "awarded",    limit: 4,   default: 0
     t.integer  "product_id", limit: 4
     t.integer  "balance",    limit: 4
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   create_table "validate_twitters", force: :cascade do |t|
     t.integer  "uid",        limit: 4
-    t.datetime "time"
     t.integer  "before",     limit: 4
     t.string   "url",        limit: 255
     t.integer  "url_id",     limit: 4
     t.integer  "awarded",    limit: 4,   default: 0
     t.integer  "product_id", limit: 4
     t.string   "username",   limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "balance",    limit: 4
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   add_foreign_key "identities", "users"

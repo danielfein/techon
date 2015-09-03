@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
          nickname = _auth.info.nickname
          twitter_link = _auth.info.Twitter
          password = Devise.friendly_token[0,20]
-         user = User.create(:password => password, :email => email, :name => name, :nickname => nickname, :twitter_link => twitter_link)
+         user = User.create(:password => password, :email => email, :name => name, :nickname => nickname)
          # puts user.errors.inspect
       end
 

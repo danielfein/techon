@@ -7,9 +7,7 @@ class ProductsController < ApplicationController
    # GET /products
    # GET /products.json
    def index
-
       @products = Product.all
-
    end
 
 
@@ -40,10 +38,8 @@ class ProductsController < ApplicationController
    # GET /products/1
    # GET /products/1.json
    def show
-
       @pages_liked_by_user = Transaction.where("recipient_uid = #{current_user.id}").where("product_id = #{params[:id]}")
       if(@pages_liked_by_user == [])
-
          @show = true
       else
          @show = false
@@ -64,9 +60,7 @@ class ProductsController < ApplicationController
    def create
       new_params = product_params.clone
       new_params[:pretty_url] = product_params[:url]
-
       url = product_params[:url]
-
       if(new_params[:provider] == "facebook")
          @products = Product.all
          @products.each do |x|
@@ -110,17 +104,17 @@ class ProductsController < ApplicationController
       elsif(new_params[:provider] == "instagram")
          begin
             url = url.gsub("http://instagram.com/",'')
-               url = url.gsub("https://instagram.com/",'')
+            url = url.gsub("https://instagram.com/",'')
             instagram = Nokogiri::HTML(open("https://api.instagram.com/v1/users/search?q=#{url}&access_token=1572822298.fb37920.1653cb1e540b441984d58ef5ce177661"))
             insta_data =  JSON.parse(instagram)['data'].first
             # abort(insta_data.inspect)
             new_params[:provider_id] = insta_data['id']
-                        new_params[:owner_uid] = current_user.id
+            new_params[:owner_uid] = current_user.id
             new_params[:name] = insta_data['full_name']
             new_params[:url] = "https://instagram.com/" + insta_data['username']
             new_params[:pretty_url] = "https://instagram.com/" + insta_data['username']
             new_params[:profile_pic] =insta_data['profile_picture']
-                     new_params[:cover_photo] =insta_data['profile_picture']
+            new_params[:cover_photo] =insta_data['profile_picture']
             # abort(instagram['data']['profile_picture'].inspect)
             @product = Product.new(new_params)
             respond_to do |format|
@@ -181,57 +175,57 @@ class ProductsController < ApplicationController
 
                end
             end
-            rescue
-               puts 'getting here 3'
-               respond_to do |format|
-                  puts 'getting here 4'
-                  @product = Product.new(new_params)
-                  @product.errors.add(:url, "Invalid URL, please ensure it is a proper Twitter Page URL")
-                  format.html { render :new}
-                  format.json { render json: @product.errors, status: :unprocessable_entity }
-               end
+         rescue
+            puts 'getting here 3'
+            respond_to do |format|
+               puts 'getting here 4'
+               @product = Product.new(new_params)
+               @product.errors.add(:url, "Invalid URL, please ensure it is a proper Twitter Page URL")
+               format.html { render :new}
+               format.json { render json: @product.errors, status: :unprocessable_entity }
             end
          end
       end
    end
+end
 
-   # PATCH/PUT /products/1
-   # PATCH/PUT /products/1.json
-   def update
-      new_params = product_params.clone
+# PATCH/PUT /products/1
+# PATCH/PUT /products/1.json
+def update
+   new_params = product_params.clone
 
-      new_params[:pretty_url] = product_params[:url]
-      new_params[:owner_uid] = User.find(current_user).id
+   new_params[:pretty_url] = product_params[:url]
+   new_params[:owner_uid] = User.find(current_user).id
 
 
-      respond_to do |format|
-         if @product.update(new_params)
-            format.html { redirect_to @product, notice: 'Product was successfully updated.' }
-            # format.json { render :show, status: :ok, location: @product }
-         else
-            format.html { render :edit }
-            format.json { render json: @product.errors, status: :unprocessable_entity }
-         end
+   respond_to do |format|
+      if @product.update(new_params)
+         format.html { redirect_to @product, notice: 'Product was successfully updated.' }
+         # format.json { render :show, status: :ok, location: @product }
+      else
+         format.html { render :edit }
+         format.json { render json: @product.errors, status: :unprocessable_entity }
       end
    end
+end
 
-   # DELETE /products/1
-   # DELETE /products/1.json
-   def destroy
-      @product.destroy
-      respond_to do |format|
-         format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
-         format.json { head :no_content }
-      end
+# DELETE /products/1
+# DELETE /products/1.json
+def destroy
+   @product.destroy
+   respond_to do |format|
+      format.html { redirect_to products_url, notice: 'Product was successfully destroyed.' }
+      format.json { head :no_content }
    end
+end
 
-   private
-   # Use callbacks to share common setup or constraints between actions.
-   def set_product
-      @product = Product.find(params[:id])
-   end
+private
+# Use callbacks to share common setup or constraints between actions.
+def set_product
+   @product = Product.find(params[:id])
+end
 
-   # Never trust parameters from the scary internet, only allow the white list through.
-   def product_params
-      params.require(:product).permit(:name, :price, :url, :description, :provider)
-   end
+# Never trust parameters from the scary internet, only allow the white list through.
+def product_params
+   params.require(:product).permit(:name, :price, :url, :description, :provider)
+end

@@ -166,11 +166,11 @@ function open_window(element, url, id, provider){
 </script>
 Current User: <%= current_user.id %>
 <div id="container" style="display:block;float:left">
+
    <p>
       <strong>Name:</strong>
       <span id="name"> <%= @product.name %></span>
-      <span id="id"> <%= @product.id %></span>
-
+      <!-- <span id="id"> <%= @product.id %></span> -->
    </p>
 
    <p>
@@ -206,5 +206,7 @@ Current User: <%= current_user.id %>
    <div id="loading" style="display:none">
       <%= image_tag "giphy.gif" %>
    </div>
+      <% else %>
+      NOTHING LEFT BRO<br>
    <% end %>
          <%= link_to 'Back', products_path %>

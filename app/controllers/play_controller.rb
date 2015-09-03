@@ -18,12 +18,12 @@ class PlayController < ApplicationController
          @product_ids[0] = 0
       end
       if(params[:id].blank?)
-         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).order("price DESC").first
+         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC").first
       else
 
          @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC").first
          # abort(params[:id].inspect)
-         # abort(@product.inspect)
+         #  abort(@product_ids.inspect)
       end
    end
 
@@ -50,7 +50,8 @@ class PlayController < ApplicationController
       end
       # @product = Product.where("price < #{@Balance}").where.not("id IN (?)", @product_ids).first
       if(params[:id] == "null")
-         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).order("price DESC").first
+         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC").first
+
       else
          @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC").first
 

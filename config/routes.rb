@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 #Stripe
     get '/payola/confirm/:id', to: redirect('/success/%{id}')
     get '/success/:id', to: 'charges#make_charge'
+        get '/success', to: 'charges#index'
+        get '/charges', to: redirect('/success')
 
   resources :charges
 
