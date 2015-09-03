@@ -1,223 +1,210 @@
-<a href="/play?id=twitter">Twitter</a><br>
-<a href="/play?id=facebook">Facebook</a><br>
-<a href="/play?id=instagram">Instagram</a><br>
-<a href="/play">All</a>
+<a href="/play">All</a> |
 
-
+<a href="/play?id=facebook">Facebook</a> |
+<a href="/play?id=instagram">Instagram</a> |
+<a href="/play?id=twitter">Twitter</a>
 
 <p id="notice"><%= notice %></p>
 
-  <% if (!@product.nil?) %>
-  <script type="text/javascript">
+<% if (!@product.nil?) %>
+<script type="text/javascript">
+
+var windows = {};
+windows['window_one'] = false;
+windows['window_two'] = false;
+windows['window_three'] = false;
+
+$(document).on( "click", "#window_button",function() {
+   console.log('in click');
+
+   open_window(this,'<%= @product.pretty_url %>', '<%= @product.id %>','<%= @product.provider %>');
+
+});
 
 
-  function check_if_user_liked(){
-    $.get('http://localhost:3000/get_likes/'+ data_get_id + '.json',function(data,status) {
-      data_parse = JSON.parse(data);
-      awarded = data_parse.awarded;
-      if (awarded == 1){
-        console.log('awarded');
-          location.reload();
+function get_next(provider){
+   console.log('in get next');
+   // $("#container").css({display: "none"});
+   // $("#loading").css({display: "block"});
+
+$('#container').addClass('animated bounceOutLeft');
+   <% if params[:id].nil?  %>
+
+   var next_provider = null;
+   <% else %>
+   var next_provider = '<%= params[:id] %>';
+   <% end %>
+   console.log(next_provider)
+   var url = 'http://localhost:3000/pull_new_product/'+ next_provider+'.json';
+   console.log(url);
+   $.get(url,function(new_product,status) {
+      console.log(new_product);
+      //handle null case bro
+      if(new_product != null){
+         console.log('in NOT NULL')
+         $("#id").text( new_product.id);
+         $("#name").text(new_product.name);
+         $("#provider").text(new_product.provider);
+         $("#price").text(new_product.price);
+         if(new_product.provider == "twitter" || new_product.provider == "instagram"){
+            var verb = "Follow ";
+         }else if (new_product.provider == "facebook") {
+            var verb = "Like ";
+         }
+         $("#window_button").text(verb + new_product.name);
+         $('#cover_photo').attr('src',new_product.cover_photo);
+         $('#profile_pic').attr('src',new_product.profile_pic);
+         $('#container').removeClass('animated bounceOutLeft');
+         $('#container').addClass('animated bounceInLeft');
+         $(document).off('click','#window_button');
+         $(document).on( "click", "#window_button",function() {
+            console.log('on click');
+            open_window(this,new_product.pretty_url, new_product.id,provider)
+
+         });
+
       }else{
-        console.log('not awarded');
-          location.reload();
+         document.getElementById('container').innerHTML = "NO PRODUCTS LEFT BRO";
       }
-    },'html');
-  }
-  var data_parse;
-  function facebookWindow(element,url) {
-    var facebook_Window = window.open(url,"facebook_Window","width=800,height=400,scrollbars=no");
-    console.log('window opened')
-    $.get('http://localhost:3000/set_likes/<%= @product.id %>.json',function(data,status) {
-      console.log(data);
+      $("#container").css({display: "block"});
+      $("#loading").css({display: "none"});
+   });
+}
+
+var data_parse;
+function open_window(element, url, id, provider){
+   console.log(provider)
+   if(provider == "facebook"){
+      if(id == null){
+         set_url = 'http://localhost:3000/set_likes/<%= @product.id %>.json';
+      }else{
+         set_url = 'http://localhost:3000/set_likes/'+id+'.json';
+      }
+   }else if (provider == "twitter") {
+      if(id == null){
+         set_url = 'http://localhost:3000/set_twitter/<%= @product.id %>.json';
+      }else{
+         set_url = 'http://localhost:3000/set_twitter/'+id+'.json';
+      }
+   }else if (provider == "instagram") {
+      if(id == null){
+         set_url = 'http://localhost:3000/set_instagram/<%= @product.id %>.json';
+      }else{
+         set_url = 'http://localhost:3000/set_instagram/'+id+'.json';
+      }
+   }
+
+   var window_one = window.open(url,"window_one","width=800,height=400,scrollbars=no");
+   console.log('window opened');
+
+   $.get(set_url,function(data,status) {
+      console.log(data)
       data_parse = JSON.parse(data);
       data_get_id = data_parse['id']
       console.log("Data ID: " + data_get_id)
       check_if_closed();
-    },'html');
+   },'html');
 
+   console.log('Ajax ran');
+   console.log("Facebook window is opened: " + window_one.closed);
+   counter = 0;
 
-    console.log('Ajax ran');
+   function check_if_closed() {
 
-    console.log("Facebook window is opened: " + facebook_Window.closed);
-    counter = 0;
-
-    function check_if_closed() {
       setTimeout(function(){
-        console.log('in check if closed');
-        if(facebook_Window.closed){
-          console.log('Closed via user');
-          clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
-          console.log('Closed out check and automated');
-          check_if_user_liked(data_get_id);
-        }else{
-          if(counter = 0){
-            automated_close();
-          }
-          check_if_closed();
-        }
+         console.log('in check if closed');
+         if(window_one.closed){
+            console.log('Closed via user');
+            clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
+            console.log('Closed out check and automated');
+            check_if_user_liked(data_get_id);
+         }else{
+            if(counter == 0){
+               automated_close();
+               counter += 1;
+            }
+            check_if_closed();
+         }
       }, 1000);
-    }
+   }
 
-    function automated_close() {
+   function automated_close() {
       setTimeout(function(){
-        if(!facebook_Window.closed){
-          window.open('', '_self', ''); facebook_Window.close(); //Both for closing the window
-          console.log('Closed via code');
-          clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
-        }
+         if(!window_one.closed){
+            window.open('', '_self', ''); window_one.close(); //Both for closing the window
+            console.log('Closed via code');
+            clearTimeout(automated_close); clearTimeout(check_if_closed); //Stop timing
+         }
       }, 15000);
-    }
-  }
-  var data_parse;
-  function instagramWindow(element,url) {
-    var instagram_Window = window.open(url,"instagram_Window","width=800,height=400,scrollbars=no");
-    console.log('window opened')
-    $.get('http://localhost:3000/set_instagram/<%= @product.id %>.json',function(data,status) {
-      console.log(data);
-      data_parse = JSON.parse(data);
-      data_get_id = data_parse['id']
-      console.log("Data ID: " + data_get_id)
-      insta_check_if_closed();
-    },'html');
+   }
 
-
-    console.log('Ajax ran');
-
-    console.log("instagram window is opened: " + instagram_Window.closed);
-    counter = 0;
-
-    function insta_check_if_closed() {
-      setTimeout(function(){
-        console.log('in check if closed');
-        if(instagram_Window.closed){
-          console.log('Closed via user');
-          clearTimeout(insta_automated_close); clearTimeout(insta_check_if_closed); //Stop timing
-          console.log('Closed out check and automated');
-          insta_check_if_user_liked(data_get_id);
-        }else{
-          if(counter = 0){
-            insta_automated_close();
-          }
-          insta_check_if_closed();
-        }
-      }, 1000);
-    }
-
-    function insta_automated_close() {
-      setTimeout(function(){
-        if(!instagram_Window.closed){
-          window.open('', '_self', ''); instagram_Window.close(); //Both for closing the window
-          console.log('Closed via code');
-          clearTimeout(insta_automated_close); clearTimeout(insta_check_if_closed); //Stop timing
-        }
-      }, 15000);
-    }
-    function insta_check_if_user_liked(){
-      $.get('http://localhost:3000/get_instagram/'+ data_get_id + '.json',function(data,status) {
-        data_parse = JSON.parse(data);
-        awarded = data_parse.awarded;
-        if (awarded == 1){
-          console.log('awarded');
-            location.reload();
-        }else{
-          console.log('not awarded');
-            location.reload();
-        }
+   function check_if_user_liked(data_get_id){
+      if(provider == "facebook"){
+         get_url = 'http://localhost:3000/get_likes/'+ data_get_id + '.json';
+      }else if (provider == "twitter") {
+         get_url = 'http://localhost:3000/get_twitter/'+ data_get_id + '.json'
+      }else if (provider == "instagram") {
+         get_url = 'http://localhost:3000/get_instagram/'+ data_get_id + '.json';
+      }
+      $.get(get_url,function(data,status) {
+         data_parse = JSON.parse(data);
+         awarded = data_parse.awarded;
+         if (awarded == 1){
+            console.log('awarded');
+            console.log('new balance is: ' + data_parse.balance)
+            $("#balance").text(data_parse.balance);
+            get_next(provider);
+         }else{
+            console.log('not awarded');
+            get_next(provider);
+         }
       },'html');
-    }
-  }
-  var data_parse;
-  function twitterWindow(element,url) {
-    var twitter_Window = window.open(url,"twitter_Window","width=800,height=400,scrollbars=no");
-    console.log('window opened')
-    $.get('http://localhost:3000/set_twitter/<%= @product.id %>.json',function(data,status) {
-      console.log(data);
-      data_parse = JSON.parse(data);
-      data_get_id = data_parse['id']
-      console.log("Data ID: " + data_get_id)
-      twitter_check_if_closed();
-    },'html');
+   }
+}
 
 
-    console.log('Ajax ran');
+</script>
+Current User: <%= current_user.id %>
+<div id="container" style="display:block;float:left">
+   <p>
+      <strong>Name:</strong>
+      <span id="name"> <%= @product.name %></span>
+      <span id="id"> <%= @product.id %></span>
 
-    console.log("twitter window is opened: " + twitter_Window.closed);
-    counter = 0;
+   </p>
 
-    function twitter_check_if_closed() {
-      setTimeout(function(){
-        console.log('in check if closed');
-        if(twitter_Window.closed){
-          console.log('Closed via user');
-          clearTimeout(twitter_automated_close); clearTimeout(twitter_check_if_closed); //Stop timing
-          console.log('Closed out check and automated');
-          twitter_check_if_user_liked(data_get_id);
-        }else{
-          if(counter = 0){
-            twitter_automated_close();
-          }
-          twitter_check_if_closed();
-        }
-      }, 1000);
-    }
+   <p>
+      <strong>Price:</strong>
+      <span id="price"> <%= @product.price %></span>
 
-    function twitter_automated_close() {
-      setTimeout(function(){
-        if(!twitter_Window.closed){
-          window.open('', '_self', ''); twitter_Window.close(); //Both for closing the window
-          console.log('Closed via code');
-          clearTimeout(twitter_automated_close); clearTimeout(twitter_check_if_closed); //Stop timing
-        }
-      }, 15000);
-    }
-    function twitter_check_if_user_liked(){
-      $.get('http://localhost:3000/get_twitter/'+ data_get_id + '.json',function(data,status) {
-        data_parse = JSON.parse(data);
-        awarded = data_parse.awarded;
-        if (awarded == 1){
-          console.log('awarded');
-          location.reload();
-        }else{
-          console.log('not awarded');
-              location.reload();
-        }
-      },'html');
-    }
-  }
-  </script>
+   </p>
+   <p>
+      <strong>Provider:</strong>
+      <span id="provider"><%= @product.provider %></span>
+   </p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @product.name %>
 
-</p>
+   <p>
+      <img id="cover_photo" src="<%= @product.cover_photo %>" style="width:200px;">
+      <img id="profile_pic" src="<%= @product.profile_pic %>" style="width:50px;">
+   </p>
 
-<p>
-  <strong>Price:</strong>
-  <%= @product.price %>
-</p>
-<p>
-  <strong>Provider:</strong>
-  <%= @product.provider %>
-</p>
+   <p>
+      <strong>URL:</strong>
 
-  <p>
-    <strong>URL:</strong>
-    <% if(@product.provider == "instagram") %>
-    <button onclick="instagramWindow(this,'http://instagram.com/<%= @product.pretty_url %>')">
-      Like <%= @product.name %></button>
-    <% elsif(@product.provider == "facebook") %>
-    <button onclick="facebookWindow(this,'<%= @product.pretty_url %>')">
-      Like <%= @product.name %></button>
-      <% elsif(@product.provider == "twitter") %>
-      <button onclick="twitterWindow(this,'http://twitter.com/<%= @product.pretty_url %>')">
-        Follow <%= @product.name %></button>
-      <% end %>
-    </p>
+      <button id="window_button">
+         <%   if(@product.provider == "twitter" || @product.provider == "instagram")
+            verb = "Follow ";
+         elsif (@product.provider == "facebook")
+            verb = "Like ";
+         end %>
+         <%= verb + @product.name %></button>
+      </p>
+   </div>
 
-<% else %>
-NO PRODUCTS LEFT BRO
 
-    <% end %>
-    <%= link_to 'Back', products_path %>
+   <div id="loading" style="display:none">
+      <%= image_tag "giphy.gif" %>
+   </div>
+   <% end %>
+         <%= link_to 'Back', products_path %>

@@ -31,20 +31,30 @@
     <%= f.submit "Update" %>
   </div>
 <% end %>
-
+<br>
+<div>
+   <span style="font-size:40px;">SYNC YO SHIT</span><br><br>
 <% [:instagram, :twitter, :facebook].each do |provider|  %>
 
     <% if(resource.identities.where(:provider => provider).empty?) %>
-      <%= "<a href='#{user_omniauth_authorize_path(provider)}'>#{provider}</a>".html_safe  %>
+      <%= "<a href='#{user_omniauth_authorize_path(provider)}'>#{provider.capitalize}</a>".html_safe  %>
     <% else %>
       <p> You have signed in with <%= provider %></p>
     <% end %>
 
 <% end %>
-
-
-<h3>Cancel my account</h3>
-
+</div>
+<br><br>
+<button id="cancel"><h3>Cancel my account</h3></button>
+<div id="cancel_toggle" style="display:none;">
 <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+</div>
 
+<br><br><br>
 <%= link_to "Back", :back %>
+
+<script>
+$(document).on('click','#cancel', function(){
+   $('#cancel_toggle').toggle("display");
+});
+</script>

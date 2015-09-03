@@ -21,6 +21,13 @@ class TwitterHelper
     end
   end
 
+   #  def find_twitter_info( _key, _options = {} )
+   #    begin
+   #      @client.user_timeline
+   #    end
+   #  end
+
+
 
 	#return Twitter Search call
 	def search_for( _key, _options = {} )

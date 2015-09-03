@@ -29,9 +29,11 @@ def get_likes()
   id = params[:id].to_i #this is the id of the individual user's attempt
   @before_count = ValidateFacebook.find_by_id(id)
 
+
 #Get transaction details
   @user_id = @before_count.uid #ID of user who made attempt to get credits (recipient)
   @product_id = @before_count.product_id
+
   @current_product = Product.find_by_id(@product_id)
 
   @current_price = @current_product.price
@@ -56,11 +58,13 @@ def get_likes()
       @temp_id = @temp_credit.id
 
       @temp_balance = @temp_credit.balance + @current_price
-      @award_creds = Credit.update(@temp_id,"uid"=>@user_id,"balance"=> @temp_balance)
+      @award_creds = Credit.update(@temp_id,"uid"=>@user_id, "balance"=> @temp_balance)
+         @before_count.balance = @temp_balance
 
     else
-        @award_credits = Credit.new("uid"=>@user_id,"balance"=> @current_price)
+        @award_credits = Credit.new("uid"=>@user_id, "balance"=> @current_price)
         @award_credits.save
+              @before_count.balance = @current_price
     end
 
 
@@ -69,9 +73,11 @@ def get_likes()
       @temp_id = @temp_credit.id
       @temp_balance = @temp_credit.balance - @current_price
       @deduct_creds = Credit.update(@temp_id,"uid"=>@current_product_sender,"balance"=> @temp_balance)
+
     else
       @deduct_creds = Credit.new("uid"=>@current_product_sender,"balance"=> @current_price)
       @deduct_creds.save
+
     end
 
     @before_count.awarded = 1;

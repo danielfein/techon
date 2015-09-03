@@ -1,10 +1,10 @@
 class ChargesController < ApplicationController
   def new
-    
+
   end
 
   def index
-    
+
   end
 
   def make_charge()
@@ -20,7 +20,7 @@ class ChargesController < ApplicationController
     @product_id = @sale.product_id
     @amount = @sale.amount
 
-    @add_payment = Transaction.new( :sender_uid => -1, :recipient_uid => @user_id, :payment_amount => @amount, :provider_type => "Stripe", :product_id => @product_id)
+    @add_payment = Transaction.new( :sender_uid => -1, :recipient_uid => @user_id, :payment_amount => @amount, :provider_type => "Stripe", :product_id => -@product_id)
     @add_payment.save
 
     @product_award_paid_for = CreditPlan.find(@product_id)

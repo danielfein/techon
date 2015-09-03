@@ -11,7 +11,6 @@ class User < ActiveRecord::Base
    end
 
    def self.create_identity(identity_attrs, user)
-
       return user.identities.where(provider: identity_attrs.provider, provider_id: identity_attrs.uid).first_or_create do | identity |
          # Provider information
          identity.provider = identity_attrs.provider

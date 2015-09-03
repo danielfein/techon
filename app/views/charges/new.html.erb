@@ -1,2 +1,30 @@
-<%= render 'payola/transactions/checkout', sellable: CreditPlan.first %>%>
-<%= render 'payola/transactions/checkout', sellable: CreditPlan.find_by_id(2) %>%>
+
+
+
+<div style="text-align:center">
+
+   <div style="float:left;max-width:400px;padding:40px;">
+      <div>
+         <h1>100</h1>
+      </div>
+      <div >
+         Buy 100 Credits now, sucker.
+      </div>
+      <span style="padding:40px;">
+      <%= render 'payola/transactions/checkout', sellable: CreditPlan.first %>
+   </span>
+   </div>
+
+   <div style="max-width:450px;padding:40px;">
+      <div>
+         <h1>500</h1>
+      </div>
+      <div>
+         Buy 500 Credits now, sucker.
+      </div>
+      <span style="padding:40px;">
+      <%= render 'payola/transactions/checkout', sellable: CreditPlan.find_by_id(2) %>
+   </span>
+   </div>
+
+</div>

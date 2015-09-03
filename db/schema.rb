@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150828122511) do
+ActiveRecord::Schema.define(version: 20150902065633) do
 
   create_table "credit_plans", force: :cascade do |t|
     t.integer  "price",         limit: 4
@@ -142,15 +142,16 @@ ActiveRecord::Schema.define(version: 20150828122511) do
   create_table "products", force: :cascade do |t|
     t.string   "name",        limit: 255
     t.integer  "price",       limit: 4
-    t.text     "description", limit: 65535
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "provider",    limit: 255
     t.string   "url",         limit: 255
     t.string   "pretty_url",  limit: 255
     t.integer  "owner_uid",   limit: 4
-    t.integer  "is_active",   limit: 4
+    t.integer  "is_active",   limit: 4,   default: 1
     t.string   "provider_id", limit: 255
+    t.string   "cover_photo", limit: 255
+    t.string   "profile_pic", limit: 255
   end
 
   create_table "settings", force: :cascade do |t|
@@ -208,6 +209,7 @@ ActiveRecord::Schema.define(version: 20150828122511) do
     t.datetime "updated_at",                         null: false
     t.integer  "awarded",    limit: 4,   default: 0
     t.integer  "product_id", limit: 4
+    t.integer  "balance",    limit: 4
   end
 
   create_table "validate_instagrams", force: :cascade do |t|
@@ -220,6 +222,7 @@ ActiveRecord::Schema.define(version: 20150828122511) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.integer  "product_id", limit: 4
+    t.integer  "balance",    limit: 4
   end
 
   create_table "validate_twitters", force: :cascade do |t|
@@ -233,6 +236,7 @@ ActiveRecord::Schema.define(version: 20150828122511) do
     t.string   "username",   limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "balance",    limit: 4
   end
 
   add_foreign_key "identities", "users"

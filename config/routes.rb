@@ -12,6 +12,10 @@ Rails.application.routes.draw do
     get '/get_instagram/:id', to: 'validate_instagrams#get_instagram'
     get '/set_twitter/:id', to: 'validate_twitters#set_twitter'
     get '/get_twitter/:id', to: 'validate_twitters#get_twitter'
+    get '/pull_new_product/:id', to: 'play#pull_new_product'
+    get '/dashboard', to: 'dashboard#index'
+    get '/hide/:id', to: 'products#hide'
+    get '/unhide/:id', to: 'products#unhide'
 
 #Stripe
     get '/payola/confirm/:id', to: redirect('/success/%{id}')
@@ -27,7 +31,7 @@ Rails.application.routes.draw do
   resources :products
     get 'sourc', to: 'products#index'
     get 'new_link', to: 'products#new'
-    root to: 'products#index'
+    root to: 'play#product'
 
   mount Payola::Engine => '/payola', as: :payola
 

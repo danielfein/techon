@@ -7,7 +7,7 @@ class ValidateTwittersController < ApplicationController
   # GET /validate_twitters
   # GET /validate_twitters.json
   def index
-    
+
     # @test = TwitterHelper.new('CURRENT_USER_TOKEN_ID', 'CURRENT_USER_TOKEN_SECRET').search_for( 'trump' )
 
     @validate_twitters = ValidateTwitter.all
@@ -50,19 +50,24 @@ class ValidateTwittersController < ApplicationController
         @temp_id = @temp_credit.id
         @temp_balance = @temp_credit.balance + @current_price
         @award_creds = Credit.update(@temp_id,"uid"=>@user_id,"balance"=> @temp_balance)
-      else
-        @award_credits = Credit.new("uid"=>@user_id,"balance"=> @current_price)
-        @award_credits.save
-      end
+        @before_count.balance = @temp_balance
+
+   else
+      @award_credits = Credit.new("uid"=>@user_id, "balance"=> @current_price)
+      @award_credits.save
+             @before_count.balance = @current_price
+   end
 
       if(Credit.find_by_uid(@current_product_sender))
         @temp_credit = Credit.find_by_uid(@current_product_sender)
         @temp_id = @temp_credit.id
         @temp_balance = @temp_credit.balance - @current_price
         @deduct_creds = Credit.update(@temp_id,"uid"=>@current_product_sender,"balance"=> @temp_balance)
-      else
-        @deduct_creds = Credit.new("uid"=>@current_product_sender,"balance"=> @current_price)
-        @deduct_creds.save
+     @before_count.balance = @temp_balance
+        else
+          @deduct_creds = Credit.new("uid"=>@current_product_sender,"balance"=> @current_price)
+          @deduct_creds.save
+          @before_count.balance = @current_price
       end
 
       @before_count.awarded = 1;

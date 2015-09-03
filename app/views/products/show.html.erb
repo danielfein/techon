@@ -14,10 +14,7 @@
   <%= @product.price %>
 </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @product.description %>
-</p>
+
 <p>
   <strong>Owner UID:</strong>
   <%= @product.owner_uid %>
@@ -35,7 +32,7 @@
     <button onclick="facebookWindow(this,'<%= @product.pretty_url %>')">
       Like <%= @product.name %></button>
       <% elsif(@product.provider == "twitter") %>
-      <button onclick="twitterWindow(this,'http://twitter.com/<%= @product.pretty_url %>')">
+      <button onclick="twitterWindow(this,'<%= @product.pretty_url %>')">
         Follow <%= @product.name %></button>
       <% end %>
     </p>

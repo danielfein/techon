@@ -6,7 +6,7 @@ class ValidateInstagramsController < ApplicationController
   # GET /validate_instagrams
   # GET /validate_instagrams.json
   def index
-    
+
     @validate_instagrams = ValidateInstagram.all
   end
 
@@ -58,11 +58,13 @@ class ValidateInstagramsController < ApplicationController
 
         @temp_balance = @temp_credit.balance + @current_price
         @award_creds = Credit.update(@temp_id,"uid"=>@user_id,"balance"=> @temp_balance)
+        @before_count.balance = @temp_balance
 
-      else
-        @award_credits = Credit.new("uid"=>@user_id,"balance"=> @current_price)
-        @award_credits.save
-      end
+  else
+      @award_credits = Credit.new("uid"=>@user_id, "balance"=> @current_price)
+      @award_credits.save
+             @before_count.balance = @current_price
+  end
 
 
       if(Credit.find_by_uid(@current_product_sender))
@@ -70,8 +72,10 @@ class ValidateInstagramsController < ApplicationController
         @temp_id = @temp_credit.id
         @temp_balance = @temp_credit.balance - @current_price
         @deduct_creds = Credit.update(@temp_id,"uid"=>@current_product_sender,"balance"=> @temp_balance)
+        @before_count.balance = @temp_balance
       else
         @deduct_creds = Credit.new("uid"=>@current_product_sender,"balance"=> @current_price)
+       @before_count.balance = @current_price
         @deduct_creds.save
       end
 
