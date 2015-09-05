@@ -1,4 +1,88 @@
+<style>
 
+.coin_container{
+   display: flex;
+   flex-flow: row;
+   justify-content: space-around
+}
+.row{
+   position:absolute;
+
+   width:90px;
+}
+.coin{
+   position:relative;
+   font-size: 0;
+   width:30px;
+   display:inline-block;
+   margin-top:5px;
+}
+.left{
+   float:left;
+}
+.middle{
+   float:left;
+}
+.right{
+   float:left;
+}
+
+</style>
+
+<div class="coin_container" style="position:absolute;right:10%;top:200px;">
+<div style="font-size:10px;position:relative;   display:inline-block;position:absolute;
+
+width:90px;z-index:10000">
+   <%= @Balance %> credits
+</div>
+
+   <%
+   offset = Random.rand(15)
+   i = 0;
+   extra = @Balance%3
+   @Balance = [[100, @Balance].min, 0].max
+   @Balance += extra
+   if extra%>
+   <div class="row" style="z-index:<%= @Balance - i %>;top:<%= i*11 %>px;margin-left:<%= offset %>px;">
+      <% if extra > 0 %>
+      <div>
+         <img src="/images/coin.png" class="coin left">
+      </div>
+      <%end
+      if extra > 1 %>
+      <div>
+         <img src="/images/coin.png" class="coin middle">
+      </div>
+      <% end %>
+      <div style="clear:both"></div>
+   </div>
+   <% i+=1
+end  %>
+
+<%
+while i <= @Balance/3 %>
+<div class="row" style="z-index:<%= @Balance - i %>;top:<%= i*11 %>px;margin-left:<%= offset %>px;">
+   <div>
+      <img src="/images/coin.png" class="coin left">
+   </div>
+   <div>
+      <img src="/images/coin.png" class="coin middle">
+   </div>
+   <div>
+      <img src="/images/coin.png" class="coin">
+   </div>
+   <div style="clear:both"></div>
+</div>
+
+
+<% i += 1
+offset = Random.rand(15)
+end %>
+
+
+
+
+</div>
 <table style="position:relative;margin:0 auto;">
    <tbody>
 
