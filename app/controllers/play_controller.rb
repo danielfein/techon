@@ -30,7 +30,7 @@ class PlayController < ApplicationController
          get_affordable_product()
       else
 
-         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC").first
+         @products = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC")
          get_affordable_product()
       end
    end
@@ -59,10 +59,10 @@ class PlayController < ApplicationController
       end
       # @product = Product.where("price < #{@Balance}").where.not("id IN (?)", @product_ids).first
       if(params[:id] == "null")
-         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC").first
+         @products = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC")
        get_affordable_product()
       else
-         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC").first
+         @products = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC")
        get_affordable_product()
       end
       respond_to do |format|
@@ -75,8 +75,9 @@ class PlayController < ApplicationController
       temp_index = 0;
       continue = true
       while(continue)
+            begin
          @temp_product = @products[temp_index]
-         begin
+
             @balance_of_user = Credit.find_by_uid(@temp_product.owner_uid)
             if @balance_of_user.balance >= @temp_product.price
                @product = @temp_product

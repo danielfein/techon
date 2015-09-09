@@ -74,10 +74,10 @@ Current User: <%= current_user.id %>
    offset = Random.rand(15)
    i = 0;
    extra = @Balance%3
-   @Balance = [[100, @Balance].min, 0].max
-   @Balance += extra
+   @Balance_new = [[100, @Balance].min, 0].max
+   @Balance_new += extra
    if extra%>
-   <div class="row" style="z-index:<%= @Balance - i %>;top:<%= i*11 %>px;margin-left:<%= offset %>px;">
+   <div class="row" style="z-index:<%= @Balance_new - i %>;top:<%= i*11 %>px;margin-left:<%= offset %>px;">
       <% if extra > 0 %>
       <div>
          <img src="/images/coin.png" class="coin left">
@@ -91,11 +91,11 @@ Current User: <%= current_user.id %>
       <div style="clear:both"></div>
    </div>
    <% i+=1
-end  %>
+end  %><br>
 
 <%
 while i <= @Balance/3 %>
-<div class="row" style="z-index:<%= @Balance - i %>;top:<%= i*11 %>px;margin-left:<%= offset %>px;">
+<div class="row" style="z-index:<%= @Balance_new - i %>;top:<%= i*11 %>px;margin-left:<%= offset %>px;">
    <div>
       <img src="/images/coin.png" class="coin left">
    </div>
