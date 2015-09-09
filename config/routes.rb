@@ -20,6 +20,8 @@ Rails.application.routes.draw do
    get '/verify/:id', to: 'verify#verify'
       get '/skip/:id', to: 'skip#index'
 
+      get '/new', to: 'products#new'
+
 #Stripe
     get '/payola/confirm/:id', to: redirect('/success/%{id}')
     get '/success/:id', to: 'charges#make_charge'
