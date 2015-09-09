@@ -20,7 +20,13 @@ $(document).on( "click", "#window_button",function() {
    open_window(this,'<%= @product.pretty_url %>', '<%= @product.id %>','<%= @product.provider %>');
 
 });
-
+$(document).on( "click", "#skip",function() {
+   url = "/skip/<%= @product.id %>.json"
+   $.get(url,function(skip_return,status) {
+      console.log(skip_return)
+      get_next(provider)
+   });
+});
 
 function get_next(provider){
    console.log('in get next');
@@ -60,13 +66,25 @@ $('#container').addClass('animated bounceOutLeft');
          $('#container').addClass('animated bounceInLeft');
          $(document).off('click','#window_button');
          $(document).on( "click", "#window_button",function() {
-            console.log('on click');
+            console.log('update on window button click');
             open_window(this,new_product.pretty_url, new_product.id,provider)
 
          });
+         $(document).off('click','#skip');
+         $(document).on( "click", "#skip",function() {
+            console.log('update on skip button click');
+            url = "/skip/"+new_product.id+".json"
+            $.get(url,function(skip_return,status) {
+               console.log(skip_return)
+               get_next(provider)
+            });
+         });
 
       }else{
+            $('#container').removeClass('animated bounceOutLeft');
+            $('#container').addClass('animated bounceInLeft');
          document.getElementById('container').innerHTML = "NO PRODUCTS LEFT BRO";
+
       }
       $("#container").css({display: "block"});
       $("#loading").css({display: "none"});
@@ -311,6 +329,7 @@ Current User: <%= current_user.id %>
 
 
 
+
 <!--
 //WORKING: -->
 
@@ -352,6 +371,7 @@ elsif (@product.provider == "facebook")
 verb = "Like ";
 end %>
 <%= verb + @product.name %></button>
+<button id="skip">SKIP</button>
 </p>
 </div>
 

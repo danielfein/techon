@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150903192321) do
+ActiveRecord::Schema.define(version: 20150909083455) do
 
   create_table "credit_plans", force: :cascade do |t|
     t.integer  "price",         limit: 4
@@ -152,6 +152,11 @@ ActiveRecord::Schema.define(version: 20150903192321) do
     t.string   "provider_id", limit: 255
     t.string   "cover_photo", limit: 255
     t.string   "profile_pic", limit: 255
+  end
+
+  create_table "skips", force: :cascade do |t|
+    t.integer "uid",        limit: 4
+    t.integer "product_id", limit: 4
   end
 
   create_table "transactions", force: :cascade do |t|

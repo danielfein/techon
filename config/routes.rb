@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get '/unhide/:id', to: 'products#unhide'
     get '/verify', to: 'verify#index'
    get '/verify/:id', to: 'verify#verify'
+      get '/skip/:id', to: 'skip#index'
 
 #Stripe
     get '/payola/confirm/:id', to: redirect('/success/%{id}')

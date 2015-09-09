@@ -4,10 +4,16 @@ class PlayController < ApplicationController
       #for header balance
 
       @products_liked_by_user = Transaction.where("recipient_uid = #{current_user.id} OR sender_uid = #{current_user.id}")
-
+      product_skips = Skip.where("uid = #{current_user.id}")
       count = 0
       @product_ids = []
       @products_liked_by_user.each do |x|
+         unless(x.product_id.blank?)
+            @product_ids[count] = x.product_id
+            count += 1
+         end
+      end
+      product_skips.each do |x|
          unless(x.product_id.blank?)
             @product_ids[count] = x.product_id
             count += 1
@@ -42,6 +48,7 @@ class PlayController < ApplicationController
 
       @products_liked_by_user = Transaction.where("recipient_uid = #{current_user.id} OR sender_uid = #{current_user.id}")
 
+      product_skips = Skip.where("uid = #{current_user.id}")
       count = 0
       @product_ids = []
 
@@ -53,7 +60,12 @@ class PlayController < ApplicationController
          end
 
       end
-
+      product_skips.each do |x|
+         unless(x.product_id.blank?)
+            @product_ids[count] = x.product_id
+            count += 1
+         end
+      end
       if(@product_ids == []) #ensure we are not checking an empty array, as that would yield an unexpected result
          @product_ids[0] = 0
       end
