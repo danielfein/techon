@@ -13,19 +13,28 @@ class PlayController < ApplicationController
             count += 1
          end
       end
+      @current_user_identity = Identity.where("user_id = #{current_user.id} AND provider = 'facebook'").first()
+
+
+      # PRICE NEEDS TO BE > BALANCE of OWNER
+      #
+      #
+      #
+
 
       if(@product_ids == []) #ensure we are not checking an empty array, as that would yield an unexpected result
          @product_ids[0] = 0
       end
       if(params[:id].blank?)
-         @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC").first
+         @products = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC")
+         get_affordable_product()
       else
 
          @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC").first
-         # abort(params[:id].inspect)
-         #  abort(@product_ids.inspect)
+         get_affordable_product()
       end
    end
+
 
    def pull_new_product
 
@@ -51,10 +60,10 @@ class PlayController < ApplicationController
       # @product = Product.where("price < #{@Balance}").where.not("id IN (?)", @product_ids).first
       if(params[:id] == "null")
          @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("is_active = 1").order("price DESC").first
-
+       get_affordable_product()
       else
          @product = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC").first
-
+       get_affordable_product()
       end
       respond_to do |format|
          format.json { render json: @product }
@@ -62,7 +71,23 @@ class PlayController < ApplicationController
    end
 
 
-
+   def get_affordable_product
+      temp_index = 0;
+      continue = true
+      while(continue)
+         @temp_product = @products[temp_index]
+         begin
+            @balance_of_user = Credit.find_by_uid(@temp_product.owner_uid)
+            if @balance_of_user.balance >= @temp_product.price
+               @product = @temp_product
+               continue = false
+            end
+         rescue
+            continue = false
+         end
+         temp_index += 1
+      end
+   end
 
    def index
 

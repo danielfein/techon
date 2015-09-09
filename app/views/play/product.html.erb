@@ -41,8 +41,10 @@ $('#container').addClass('animated bounceOutLeft');
       console.log(new_product);
       //handle null case bro
       if(new_product != null){
+         // reloadLikeButton(new_product.url);
+         console.log(new_product.url);
          console.log('in NOT NULL')
-         $("#id").text( new_product.id);
+         // $("#id").text( new_product.id);
          $("#name").text(new_product.name);
          $("#provider").text(new_product.provider);
          $("#price").text(new_product.price);
@@ -98,10 +100,10 @@ function open_window(element, url, id, provider){
    console.log('window opened');
 
    $.get(set_url,function(data,status) {
-      console.log(data)
+      console.log(data);
       data_parse = JSON.parse(data);
-      data_get_id = data_parse['id']
-      console.log("Data ID: " + data_get_id)
+      data_get_id = data_parse['id'];
+      console.log("Data ID: " + data_get_id);
       check_if_closed();
    },'html');
 
@@ -110,7 +112,6 @@ function open_window(element, url, id, provider){
    counter = 0;
 
    function check_if_closed() {
-
       setTimeout(function(){
          console.log('in check if closed');
          if(window_one.closed){
@@ -161,16 +162,110 @@ function open_window(element, url, id, provider){
       },'html');
    }
 }
-
+//
+// function set_fb_two(id){
+//    if(id == null){
+//       set_url = 'http://localhost:3000/set_likes/<%= @product.id %>.json';
+//       console.log('set_url: ' + set_url);
+//       $.get(set_url,function(new_product,status) {
+//          console.log(new_product);
+//          setInterval(function(){
+//             if(count == 0){
+//                //test then see
+//                get_next_fb(new_product.id);
+//             }
+//          });
+//       });
+//    }
+// }
+//
+//
+//
+// function get_next_fb(provider){
+//    console.log('get_next_fb');
+//    var url = 'http://localhost:3000/pull_new_product/facebook.json';
+//    console.log(url);
+//    $.get(url,function(new_product,status) {
+//       console.log(new_product);
+//    });
+// }
+//
+// $(function() {
+//    $('#start').on('click', function(){
+//       counter();
+//       console.log(count);
+//    });
+// });
+//
+// var count = 4
+// function counter(){
+//    var timer = setInterval(function(){
+//       $('#timer').text(count + " seconds left");
+//       // console.log(count);
+//       if(count == 4){
+//          //remove start button
+//          $('#start').hide();
+//       }else if(count == 0){
+//          set_fb_two();
+//          get_next_fb("facebook");
+//          //clearInterval(timer);
+//          count = 5;
+//          console.log('Cleared timer, time to load next:');
+//       }
+//       count -= 1;
+//    }, 1000);
+// }
+// counter();
+//
+// $(function() {
+//    $("#fb").on('click', function(){
+//       var url = "https://facebook.com/cristiano";
+//       console.log('Facebook was clicked, will reload like button with ' + url);
+//       reloadLikeButton(url);
+//    });
+// });
+//
+// function reloadLikeButton(url){
+//    $('#fb-like').empty();
+//    $('#fb-like').html('<div id="fb-like" class="fb-like fb_iframe_widget" data-href="' + url + '" data-layout="standard" data-action="like" data-show-faces="true"></div>');
+//    if (typeof FB !== 'undefined') {
+//       FB.XFBML.parse(document.getElementById('#fb-like'));
+//    }
+// }
 
 </script>
-Current User: <%= current_user.id %>
-<div id="container" style="display:block;float:left">
+<div id="fb-root"></div>
+<script>
 
+
+var fb_button = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+</script>
+<button id="fb">Facebook</button>
+
+<!-- Your like button code -->
+<div id="fb-like" class="fb-like fb_iframe_widget" data-href="<%= @product.url %>"  data-layout="standard"  data-action="like" data-show-faces="true">
+</div>
+<span id="like"></span>
+
+
+Current User: <%= current_user.id %>
+
+<!-- <div id="trial_container" style="display:block;float:left">
+<% if(!@current_user_identity.nil?) %>
+   <button id="start">Start</button>
+   <div id="timer">15 seconds left
+   </div>
+<% end %>
    <p>
       <strong>Name:</strong>
       <span id="name"> <%= @product.name %></span>
-      <!-- <span id="id"> <%= @product.id %></span> -->
    </p>
 
    <p>
@@ -200,7 +295,65 @@ Current User: <%= current_user.id %>
          end %>
          <%= verb + @product.name %></button>
       </p>
-   </div>
+   </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+//WORKING: -->
+
+<div id="container" style="display:block;float:left">
+
+<button id="start">Start</button>
+<div id="timer">15 seconds left
+</div>
+
+<p>
+<strong>Name:</strong>
+<span id="name"> <%= @product.name %></span>
+
+</p>
+
+<p>
+<strong>Price:</strong>
+<span id="price"> <%= @product.price %></span>
+
+</p>
+<p>
+<strong>Provider:</strong>
+<span id="provider"><%= @product.provider %></span>
+</p>
+
+
+<p>
+<img id="cover_photo" src="<%= @product.cover_photo %>" style="width:200px;">
+<img id="profile_pic" src="<%= @product.profile_pic %>" style="width:50px;">
+</p>
+
+<p>
+<strong>URL:</strong>
+
+<button id="window_button">
+<%   if(@product.provider == "twitter" || @product.provider == "instagram")
+verb = "Follow ";
+elsif (@product.provider == "facebook")
+verb = "Like ";
+end %>
+<%= verb + @product.name %></button>
+</p>
+</div>
 
 
    <div id="loading" style="display:none">

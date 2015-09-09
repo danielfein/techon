@@ -28,13 +28,47 @@
 }
 
 </style>
+<script>
+$(function() {
+   $('#start').on('click', function(){
+      counter();
+      console.log(count);
 
-<div class="coin_container" style="position:absolute;right:10%;top:200px;">
-<div style="font-size:10px;position:relative;   display:inline-block;position:absolute;
+   });
+});
+var count = 15
+function counter(){
+   var timer = setInterval(function(){
 
-width:90px;z-index:10000">
-   <%= @Balance %> credits
-</div>
+      $('#timer').text(count + " seconds left");
+      console.log(count);
+      if(count == 14){
+         //remove start button
+         $('#start').hide();
+      }else if(count == 0){
+         clearInterval(timer);
+         console.log('Cleared timer, time to load next:')
+
+      }
+      count -= 1;
+
+   }, 1000);
+}
+
+
+</script>
+
+
+Current User: <%= current_user.id %>
+<div id="container" style="display:block;float:left">
+   <button id="start">Start</button>
+   <div id="timer">15 seconds left
+   </div>
+
+   <div class="coin_container" style="position:absolute;right:10%;top:200px;">
+      <div style="font-size:10px;position:relative;display:inline-block;position:absolute;width:90px;z-index:10000">
+      <%= @Balance %> credits
+   </div>
 
    <%
    offset = Random.rand(15)
