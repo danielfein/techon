@@ -14,12 +14,12 @@ class ApplicationController < ActionController::Base
          if(!@Credits.nil?)
             @Balance = @Credits.balance
          else
-            @Add_User_Credit = Credit.new("uid"=>current_user.id,"balance"=> 0)
+            @Add_User_Credit = Credit.new("uid"=>current_user.id,"balance"=> 50)
             @Add_User_Credit.save
             if @Add_User_Credit.save
                @Balance = Credit.find_by_uid(current_user.id).balance
             else
-               @Balance = 0
+               @Balance = 50
             end
          end
       end

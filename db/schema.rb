@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150909083455) do
+ActiveRecord::Schema.define(version: 20150903192321) do
 
   create_table "credit_plans", force: :cascade do |t|
     t.integer  "price",         limit: 4

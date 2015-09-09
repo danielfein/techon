@@ -14,6 +14,7 @@ class CreditsController < ApplicationController
 
   # GET /credits/new
   def new
+     abort('here')
     @credit = Credit.new
   end
 

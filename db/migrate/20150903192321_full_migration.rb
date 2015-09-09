@@ -136,5 +136,11 @@ class FullMigration < ActiveRecord::Migration
          t.string :provider_id
          t.timestamps null: false
       end
+      
+      create_table :skips do |t|
+         t.integer :uid
+         t.integer :product_id
+      end
+
    end
 end

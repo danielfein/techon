@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Follow on </title>
-  <%= stylesheet_link_tag    'application', media: 'all'%>
-  <%= javascript_include_tag 'application'%>
-  <%= csrf_meta_tags %>
+   <title>Follow on </title>
+   <%= stylesheet_link_tag    'application', media: 'all'%>
+   <%= javascript_include_tag 'application'%>
+   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<% if current_user %>
+   <% if current_user %>
    <div style="position:absolute;left:20px;top:-10px;"><h1>Your current balance is: <span id="balance"><%= number_with_delimiter(@Balance, :delimiter => ',')  %></span></h1></div>
-     <div style="position:absolute;right:20px;top:20px;">
-        <%= link_to('Earn Credits', play_path) %> | <%= link_to('Dashboard', dashboard_path) %> | <%= link_to('Add New', new_path) %> | 
-<%= link_to 'More Credits', new_charge_path  %> |
-<%= link_to('Settings', edit_user_registration_path) %> |  <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
-</div><div></div>
-<% end %>
+   <div style="position:absolute;right:20px;top:20px;">
+      <%= link_to('Earn Credits', play_path) %> | <%= link_to('Dashboard', dashboard_path) %> | <%= link_to('Add New', new_path) %> |
+      <%= link_to 'More Credits', new_charge_path  %> |
+      <%= link_to('Settings', edit_user_registration_path) %> | <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
+   </div><div></div>
+   <% end %>
 
 
-  <br><br>
-<%= yield %>
+   <br><br>
+   <%= yield %>
 
 
 </body>
