@@ -10,7 +10,6 @@ class ApplicationController < ActionController::Base
    def display_balance
       if(current_user != nil)
          @Credits = Credit.find_by_uid(current_user.id)
-
          if(!@Credits.nil?)
             @Balance = @Credits.balance
          else

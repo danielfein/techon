@@ -1,6 +1,11 @@
 class PlayController < ApplicationController
-   def product
 
+
+
+
+
+   def product
+      @products_all = Product.where("owner_uid = #{current_user.id}")
       #for header balance
 
       @products_liked_by_user = Transaction.where("recipient_uid = #{current_user.id} OR sender_uid = #{current_user.id}")
@@ -77,6 +82,7 @@ class PlayController < ApplicationController
          @products = Product.where.not("id IN (?) OR owner_uid = (?)", @product_ids, current_user.id).where("provider = (?) AND is_active = 1 ", params[:id]).order("price DESC")
        get_affordable_product()
       end
+
       respond_to do |format|
          format.json { render json: @product }
       end

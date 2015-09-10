@@ -5,7 +5,10 @@
 
 <p id="notice"><%= notice %></p>
 
-<% if (!@product.nil?) %>
+<%
+last_hidden_index = 0 #instantiate
+last_show_index = 0
+if (!@product.nil?) %>
 <script type="text/javascript">
 
 var windows = {};
@@ -179,158 +182,34 @@ function open_window(element, url, id, provider){
       },'html');
    }
 }
-//
-// function set_fb_two(id){
-//    if(id == null){
-//       set_url = 'http://localhost:3000/set_likes/<%= @product.id %>.json';
-//       console.log('set_url: ' + set_url);
-//       $.get(set_url,function(new_product,status) {
-//          console.log(new_product);
-//          setInterval(function(){
-//             if(count == 0){
-//                //test then see
-//                get_next_fb(new_product.id);
-//             }
-//          });
-//       });
-//    }
-// }
-//
-//
-//
-// function get_next_fb(provider){
-//    console.log('get_next_fb');
-//    var url = 'http://localhost:3000/pull_new_product/facebook.json';
-//    console.log(url);
-//    $.get(url,function(new_product,status) {
-//       console.log(new_product);
-//    });
-// }
-//
-// $(function() {
-//    $('#start').on('click', function(){
-//       counter();
-//       console.log(count);
-//    });
-// });
-//
-// var count = 4
-// function counter(){
-//    var timer = setInterval(function(){
-//       $('#timer').text(count + " seconds left");
-//       // console.log(count);
-//       if(count == 4){
-//          //remove start button
-//          $('#start').hide();
-//       }else if(count == 0){
-//          set_fb_two();
-//          get_next_fb("facebook");
-//          //clearInterval(timer);
-//          count = 5;
-//          console.log('Cleared timer, time to load next:');
-//       }
-//       count -= 1;
-//    }, 1000);
-// }
-// counter();
-//
-// $(function() {
-//    $("#fb").on('click', function(){
-//       var url = "https://facebook.com/cristiano";
-//       console.log('Facebook was clicked, will reload like button with ' + url);
-//       reloadLikeButton(url);
-//    });
-// });
-//
-// function reloadLikeButton(url){
-//    $('#fb-like').empty();
-//    $('#fb-like').html('<div id="fb-like" class="fb-like fb_iframe_widget" data-href="' + url + '" data-layout="standard" data-action="like" data-show-faces="true"></div>');
-//    if (typeof FB !== 'undefined') {
-//       FB.XFBML.parse(document.getElementById('#fb-like'));
-//    }
-// }
+
+$(document).on("click", ".hide", function(){
+   console.log('here');
+   var id = $(this).data('id');
+   var index = $(this).data('index');
+   console.log(id);
+
+   url = "/hide/"+id+".json";
+   $.get(url, function(data){
+      console.log(data);
+      $('*[data-show='+id+']').css({ "display": "none"});
+      $('*[data-hide='+id+']').css({ "display": "block"});
+   });
+});
+
+$(document).on("click", ".unhide", function(){
+   console.log('here');
+   var id = $(this).data('id');
+   console.log(id);
+   url = "/unhide/"+id+".json";
+   $.get(url, function(data){
+      console.log(data);
+      $('*[data-show='+id+']').css({ "display": "block"});
+      $('*[data-hide='+id+']').css({ "display": "none"});
+   });
+});
 
 </script>
-<!-- <div id="fb-root"></div>
-<script>
-
-
-var fb_button = (function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-</script>
-<!-- <button id="fb">Facebook</button>
-
-<!-- Your like button code -->
-<!-- <div id="fb-like" class="fb-like fb_iframe_widget" data-href="<%= @product.url %>"  data-layout="standard"  data-action="like" data-show-faces="true">
-</div> -->
-<!-- <span id="like"></span> -->
-
-
-Current User: <%= current_user.id %>
-
-<!-- <div id="trial_container" style="display:block;float:left">
-<% if(!@current_user_identity.nil?) %>
-   <button id="start">Start</button>
-   <div id="timer">15 seconds left
-   </div>
-<% end %>
-   <p>
-      <strong>Name:</strong>
-      <span id="name"> <%= @product.name %></span>
-   </p>
-
-   <p>
-      <strong>Price:</strong>
-      <span id="price"> <%= @product.price %></span>
-
-   </p>
-   <p>
-      <strong>Provider:</strong>
-      <span id="provider"><%= @product.provider %></span>
-   </p>
-
-
-   <p>
-      <img id="cover_photo" src="<%= @product.cover_photo %>" style="width:200px;">
-      <img id="profile_pic" src="<%= @product.profile_pic %>" style="width:50px;">
-   </p>
-
-   <p>
-      <strong>URL:</strong>
-
-      <button id="window_button">
-         <%   if(@product.provider == "twitter" || @product.provider == "instagram")
-            verb = "Follow ";
-         elsif (@product.provider == "facebook")
-            verb = "Like ";
-         end %>
-         <%= verb + @product.name %></button>
-      </p>
-   </div> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-//WORKING: -->
 
 <div id="container" style="display:block;float:left">
 
@@ -383,3 +262,74 @@ end %>
    <% end %>
          <%= link_to 'Back', products_path %>
 <!-- FOOTER -->
+
+
+<div id="sidebar">
+   <table style="position:relative;margin:0 auto;" id="hideshow">
+      <tbody>
+
+         <%
+         index = 1 #skip the Active row
+          counter = 0
+         neither = true %>
+         <% @products_all.each do |product| %>
+         <% if counter == 0 %>
+         <tr>
+            <td colspan="5" style="text-align:center">
+               ACTIVE
+            </td>
+         </tr>
+         <%
+         counter += 1
+         neither = false %>
+         <% end %>
+         <% if product.is_active == 1 %>
+            <tr style="display:block"  data-show="<%= product.id %>">
+         <% else %>
+            <tr style="display:none" data-show="<%= product.id %>">
+         <% end %>
+            <td><%= product.name %></td>
+            <td><%= product.price %></td>
+            <td><%= link_to product.url, product %></td>
+            <td><%= link_to 'More', product %></td>
+            <td><button class="hide" data-index="<%= index %>" data-id="<%= product.id %>">HIDE</button></td>
+         </tr>
+
+         <% end %>
+
+         <% counter = 0 %>
+         <% @products_all.each do |product| %>
+         <% if counter == 0 %>
+         <tr>
+            <td colspan="5" style="text-align:center">
+               HIDDEN
+            </td>
+         </tr>
+         <%
+         index += 1 #skip the Hidden row
+         counter += 1
+         neither = false%>
+         <% end %>
+         <% if product.is_active == 0 %>
+         <tr style="display:block"  data-hide="<%= product.id %>">
+      <% else %>
+         <tr style="display:none"  data-hide="<%= product.id %>">
+      <% end %>
+            <td><%= product.name %></td>
+            <td><%= product.price %></td>
+            <td><%= link_to product.url, product %></td>
+            <td><%= link_to 'More', product %></td>
+            <!-- <td><%= link_to 'Edit', edit_product_path(product) %></td> -->
+               <td><button class="unhide" data-index="<%= index %>" data-hide="<%= product.id %>" data-id="<%= product.id %>">SHOW</button></td>
+         </tr>
+         <% end %>
+         <% if neither %>
+         <tr>
+            <td colspan="6" style="text-align:center">
+               <%= link_to 'Yo bro, you have no products, get on that!', new_product_path %>
+            </td>
+         </tr>
+         <% end %>
+      </tbody>
+   </table>
+</div>
